@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TabBar, TabBarItem } from 'tdesign-mobile-react';
+import { Button, TabBar, TabBarItem, Dialog } from 'tdesign-mobile-react';
 import type { TimeRange, PracticeRecord } from '../../types';
 import { storageService } from '../../services/storage';
 import { practiceData } from '../../data/practiceData';
@@ -10,6 +10,7 @@ export const StatisticsPage: React.FC = () => {
     const [records, setRecords] = useState<PracticeRecord[]>([]);
     const [totalScore, setTotalScore] = useState(0);
     const [activeChart, setActiveChart] = useState('radar');
+    const [showClearConfirm, setShowClearConfirm] = useState(false);
 
     // 获取时间范围
     const getTimeRange = (range: TimeRange) => {
@@ -101,6 +102,21 @@ export const StatisticsPage: React.FC = () => {
     const radarData = getRadarData();
     const pieData = getPieData();
     const trendData = getTrendData();
+
+    const handleClearAllData = () => {
+        setShowClearConfirm(true);
+    };
+
+    const handleClearConfirm = () => {
+        storageService.clearAllData();
+        setRecords([]);
+        setTotalScore(0);
+        setShowClearConfirm(false);
+
+        // 触发全局事件，通知其他组件数据已清空
+        const event = new CustomEvent('dataCleared');
+        window.dispatchEvent(event);
+    };
 
     return (
         <div className="p-4 md:p-6 max-w-4xl mx-auto pb-20 md:pb-6">
@@ -258,6 +274,32 @@ export const StatisticsPage: React.FC = () => {
                     )}
                 </div>
             </div>
+
+            {/* 清空数据按钮 */}
+            <div className="card">
+                <div className="button-center">
+                    <Button
+                        theme="danger"
+                        size="large"
+                        onClick={handleClearAllData}
+                        className="delete-button"
+                    >
+                        清空所有数据
+                    </Button>
+                </div>
+            </div>
+
+            {/* 清空确认对话框 */}
+            <Dialog
+                visible={showClearConfirm}
+                onClose={() => setShowClearConfirm(false)}
+                title="确认清空"
+                content="确定要清空所有练习记录吗？此操作不可恢复，所有数据将被永久删除。"
+                confirmBtn="清空"
+                cancelBtn="取消"
+                onConfirm={handleClearConfirm}
+                theme="danger"
+            />
         </div>
     );
 }; 

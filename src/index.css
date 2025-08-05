@@ -490,12 +490,15 @@ html .t-checkbox__label,
 
 /* 成功按钮动画效果 */
 .success-button {
+  background-color: #00a870 !important;
+  color: white !important;
+  border: 2px solid #00a870 !important;
   transition: all 0.3s ease !important;
-  border: 2px solid transparent !important;
 }
 
 .success-button:hover {
-  border-color: #00a870 !important;
+  background-color: #008f5a !important;
+  border-color: #008f5a !important;
   transform: translateY(-1px) !important;
 }
 
@@ -508,6 +511,7 @@ html .t-checkbox__label,
   color: white !important;
   border-color: #00a870 !important;
   cursor: not-allowed !important;
+  opacity: 0.6 !important;
 }
 
 /* 删除按钮样式 */
