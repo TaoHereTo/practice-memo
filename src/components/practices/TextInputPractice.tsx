@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Textarea } from 'tdesign-mobile-react';
 import type { PracticeRecord } from '../../types';
 import { storageService } from '../../services/storage';

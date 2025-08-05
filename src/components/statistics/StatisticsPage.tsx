@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TabBar, TabBarItem, Dialog } from 'tdesign-mobile-react';
+import { Button, Dialog } from 'tdesign-mobile-react';
 import type { TimeRange, PracticeRecord } from '../../types';
 import { storageService } from '../../services/storage';
 import { practiceData } from '../../data/practiceData';
@@ -298,7 +298,6 @@ export const StatisticsPage: React.FC = () => {
                 confirmBtn="清空"
                 cancelBtn="取消"
                 onConfirm={handleClearConfirm}
-                theme="danger"
             />
         </div>
     );

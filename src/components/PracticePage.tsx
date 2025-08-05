@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from 'tdesign-mobile-react';
 import { PhoneAwayPractice } from './practices/PhoneAwayPractice';
 import { TextInputPractice } from './practices/TextInputPractice';
@@ -9,11 +9,11 @@ import type { PracticeRecord } from '../types';
 
 export const PracticePage: React.FC = () => {
     const [activeTab, setActiveTab] = useState('practice_1');
-    const [records, setRecords] = useState<PracticeRecord[]>([]);
 
     // 监听新记录添加
     const handleRecordAdded = (record: PracticeRecord) => {
-        setRecords(prev => [record, ...prev]);
+        // 记录已添加，这里可以触发其他逻辑
+        console.log('新记录已添加:', record);
     };
 
     const renderPracticeContent = () => {

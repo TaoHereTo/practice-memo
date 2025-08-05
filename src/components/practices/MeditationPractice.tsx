@@ -171,7 +171,7 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                             开始冥想
                         </Button>
                         <Button
-                            theme="success"
+                            theme="primary"
                             size="large"
                             onClick={handleManualComplete}
                             disabled={showSuccess}

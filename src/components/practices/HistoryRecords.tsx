@@ -122,7 +122,6 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
                                 checked={selectedRecords.size === records.length && records.length > 0}
                                 indeterminate={selectedRecords.size > 0 && selectedRecords.size < records.length}
                                 onChange={handleSelectAll}
-                                size="small"
                             >
                                 全选
                             </Checkbox>
@@ -149,7 +148,6 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
                                     <Checkbox
                                         checked={selectedRecords.has(record.id)}
                                         onChange={(checked) => handleCheckboxChange(record.id, checked)}
-                                        size="small"
                                     />
                                 </div>
                                 <div className="flex-1 min-w-0 flex flex-col justify-center">
@@ -179,7 +177,6 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
                 confirmBtn="删除"
                 cancelBtn="取消"
                 onConfirm={handleDeleteConfirm}
-                theme="danger"
             />
         </>
     );
