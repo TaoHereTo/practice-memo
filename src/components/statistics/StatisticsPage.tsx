@@ -178,274 +178,284 @@ export const StatisticsPage: React.FC = () => {
     const trendData = getTrendData();
 
     return (
-        <div className="mx-auto content-area" style={{ background: '#F3F4F6', minHeight: '100vh', paddingTop: '20px', width: '95%', padding: '20px' }}>
+        <div className="mobile-container content-area main-content px-4 md:px-8">
             {/* 时间范围选择器 */}
-            <Card className="glassmorphism mb-6">
-                <CardHeader>
-                    <CardTitle className="text-foreground">时间范围</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {/* 时间范围切换指示器 */}
-                    <div className="flex justify-center space-x-2 mb-4">
-                        <button
-                            onClick={() => setTimeRange('today')}
-                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${timeRange === 'today'
-                                ? 'bg-primary text-primary-foreground shadow-lg'
-                                : 'text-muted hover:text-foreground'
-                                }`}
-                            style={timeRange !== 'today' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
-                        >
-                            今日
-                        </button>
-                        <button
-                            onClick={() => setTimeRange('week')}
-                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${timeRange === 'week'
-                                ? 'bg-primary text-primary-foreground shadow-lg'
-                                : 'text-muted hover:text-foreground'
-                                }`}
-                            style={timeRange !== 'week' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
-                        >
-                            本周
-                        </button>
-                        <button
-                            onClick={() => setTimeRange('month')}
-                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${timeRange === 'month'
-                                ? 'bg-primary text-primary-foreground shadow-lg'
-                                : 'text-muted hover:text-foreground'
-                                }`}
-                            style={timeRange !== 'month' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
-                        >
-                            本月
-                        </button>
-                    </div>
+            <div className="card-container">
+                <Card className="glassmorphism mb-6">
+                    <CardHeader>
+                        <CardTitle className="text-foreground">时间范围</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        {/* 时间范围切换指示器 */}
+                        <div className="flex justify-center space-x-2 mb-4">
+                            <button
+                                onClick={() => setTimeRange('today')}
+                                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${timeRange === 'today'
+                                    ? 'bg-primary text-primary-foreground shadow-lg'
+                                    : 'text-muted hover:text-foreground'
+                                    }`}
+                                style={timeRange !== 'today' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                            >
+                                今日
+                            </button>
+                            <button
+                                onClick={() => setTimeRange('week')}
+                                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${timeRange === 'week'
+                                    ? 'bg-primary text-primary-foreground shadow-lg'
+                                    : 'text-muted hover:text-foreground'
+                                    }`}
+                                style={timeRange !== 'week' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                            >
+                                本周
+                            </button>
+                            <button
+                                onClick={() => setTimeRange('month')}
+                                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${timeRange === 'month'
+                                    ? 'bg-primary text-primary-foreground shadow-lg'
+                                    : 'text-muted hover:text-foreground'
+                                    }`}
+                                style={timeRange !== 'month' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                            >
+                                本月
+                            </button>
+                        </div>
 
-                    {/* 隐藏的轮播组件用于手势支持 */}
-                    <div className="opacity-0 h-0 overflow-hidden">
-                        <Carousel
-                            setApi={setTimeRangeApi}
-                            opts={{
-                                align: "start",
-                                dragFree: false,
-                                containScroll: "trimSnaps"
-                            }}
-                            className="w-full"
-                        >
-                            <CarouselContent className="-ml-0">
-                                <CarouselItem className="pl-0"><div>今日</div></CarouselItem>
-                                <CarouselItem className="pl-0"><div>本周</div></CarouselItem>
-                                <CarouselItem className="pl-0"><div>本月</div></CarouselItem>
-                            </CarouselContent>
-                        </Carousel>
-                    </div>
-                </CardContent>
-            </Card>
+                        {/* 隐藏的轮播组件用于手势支持 */}
+                        <div className="opacity-0 h-0 overflow-hidden">
+                            <Carousel
+                                setApi={setTimeRangeApi}
+                                opts={{
+                                    align: "start",
+                                    dragFree: false,
+                                    containScroll: "trimSnaps"
+                                }}
+                                className="w-full"
+                            >
+                                <CarouselContent className="-ml-0">
+                                    <CarouselItem className="pl-0"><div>今日</div></CarouselItem>
+                                    <CarouselItem className="pl-0"><div>本周</div></CarouselItem>
+                                    <CarouselItem className="pl-0"><div>本月</div></CarouselItem>
+                                </CarouselContent>
+                            </Carousel>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
             {/* 总分卡片 */}
-            <Card className="glassmorphism mb-6">
-                <CardHeader>
-                    <CardTitle className="text-foreground">总得分</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="text-center py-6">
-                        <div className="text-6xl font-bold text-foreground mb-2">{totalScore}</div>
-                        <div className="text-lg text-muted">分</div>
-                    </div>
-                </CardContent>
-            </Card>
+            <div className="card-container">
+                <Card className="glassmorphism mb-6">
+                    <CardHeader>
+                        <CardTitle className="text-foreground">总得分</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-center py-6">
+                            <div className="text-6xl font-bold text-foreground mb-2">{totalScore}</div>
+                            <div className="text-lg text-muted">分</div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
             {/* 图表切换 */}
-            <Card className="glassmorphism mb-6">
-                <CardHeader>
-                    <CardTitle className="text-foreground">数据图表</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {/* 图表类型切换指示器 */}
-                    <div className="flex justify-center space-x-2 mb-4">
-                        <button
-                            onClick={() => setActiveChart('radar')}
-                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${activeChart === 'radar'
-                                ? 'bg-primary text-primary-foreground shadow-lg'
-                                : 'text-muted hover:text-foreground'
-                                }`}
-                            style={activeChart !== 'radar' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
-                        >
-                            练习分布
-                        </button>
-                        <button
-                            onClick={() => setActiveChart('pie')}
-                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${activeChart === 'pie'
-                                ? 'bg-primary text-primary-foreground shadow-lg'
-                                : 'text-muted hover:text-foreground'
-                                }`}
-                            style={activeChart !== 'pie' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
-                        >
-                            饼状图
-                        </button>
-                        <button
-                            onClick={() => setActiveChart('trend')}
-                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${activeChart === 'trend'
-                                ? 'bg-primary text-primary-foreground shadow-lg'
-                                : 'text-muted hover:text-foreground'
-                                }`}
-                            style={activeChart !== 'trend' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
-                        >
-                            得分趋势
-                        </button>
-                    </div>
+            <div className="card-container">
+                <Card className="glassmorphism mb-6">
+                    <CardHeader>
+                        <CardTitle className="text-foreground">数据图表</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        {/* 图表类型切换指示器 */}
+                        <div className="flex justify-center space-x-2 mb-4">
+                            <button
+                                onClick={() => setActiveChart('radar')}
+                                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${activeChart === 'radar'
+                                    ? 'bg-primary text-primary-foreground shadow-lg'
+                                    : 'text-muted hover:text-foreground'
+                                    }`}
+                                style={activeChart !== 'radar' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                            >
+                                练习分布
+                            </button>
+                            <button
+                                onClick={() => setActiveChart('pie')}
+                                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${activeChart === 'pie'
+                                    ? 'bg-primary text-primary-foreground shadow-lg'
+                                    : 'text-muted hover:text-foreground'
+                                    }`}
+                                style={activeChart !== 'pie' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                            >
+                                饼状图
+                            </button>
+                            <button
+                                onClick={() => setActiveChart('trend')}
+                                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${activeChart === 'trend'
+                                    ? 'bg-primary text-primary-foreground shadow-lg'
+                                    : 'text-muted hover:text-foreground'
+                                    }`}
+                                style={activeChart !== 'trend' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                            >
+                                得分趋势
+                            </button>
+                        </div>
 
-                    {/* 隐藏的轮播组件用于手势支持 */}
-                    <div className="opacity-0 h-0 overflow-hidden">
-                        <Carousel
-                            setApi={setChartApi}
-                            opts={{
-                                align: "start",
-                                dragFree: false,
-                                containScroll: "trimSnaps"
-                            }}
-                            className="w-full"
-                        >
-                            <CarouselContent className="-ml-0">
-                                <CarouselItem className="pl-0"><div>练习分布</div></CarouselItem>
-                                <CarouselItem className="pl-0"><div>饼状图</div></CarouselItem>
-                                <CarouselItem className="pl-0"><div>得分趋势</div></CarouselItem>
-                            </CarouselContent>
-                        </Carousel>
-                    </div>
-                </CardContent>
-            </Card>
+                        {/* 隐藏的轮播组件用于手势支持 */}
+                        <div className="opacity-0 h-0 overflow-hidden">
+                            <Carousel
+                                setApi={setChartApi}
+                                opts={{
+                                    align: "start",
+                                    dragFree: false,
+                                    containScroll: "trimSnaps"
+                                }}
+                                className="w-full"
+                            >
+                                <CarouselContent className="-ml-0">
+                                    <CarouselItem className="pl-0"><div>练习分布</div></CarouselItem>
+                                    <CarouselItem className="pl-0"><div>饼状图</div></CarouselItem>
+                                    <CarouselItem className="pl-0"><div>得分趋势</div></CarouselItem>
+                                </CarouselContent>
+                            </Carousel>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
             {/* 图表区域 */}
-            <Card className="glassmorphism mb-6">
-                <CardContent className="p-6">
-                    <div className="h-80">
-                        {activeChart === 'radar' && (
-                            <ResponsiveContainer width="100%" height="100%">
-                                <RadarChart data={radarData}>
-                                    <PolarGrid stroke="#E5E7EB" strokeDasharray="3 3" />
-                                    <PolarAngleAxis
-                                        dataKey="practice"
-                                        tick={{ fill: '#000000', fontSize: 12, fontWeight: 500 }}
-                                    />
-                                    <PolarRadiusAxis
-                                        tick={{ fill: '#000000', fontSize: 10 }}
-                                        axisLine={false}
-                                    />
-                                    <Radar
-                                        name="得分"
-                                        dataKey="score"
-                                        stroke="rgb(225, 252, 74)"
-                                        strokeWidth={3}
-                                        fill="rgb(225, 252, 74)"
-                                        fillOpacity={0.2}
-                                        dot={{ fill: 'rgb(225, 252, 74)', strokeWidth: 2, r: 4 }}
-                                    />
-                                </RadarChart>
-                            </ResponsiveContainer>
-                        )}
+            <div className="card-container">
+                <Card className="glassmorphism mb-6">
+                    <CardContent className="p-6">
+                        <div className="h-80">
+                            {activeChart === 'radar' && (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <RadarChart data={radarData}>
+                                        <PolarGrid stroke="#E5E7EB" strokeDasharray="3 3" />
+                                        <PolarAngleAxis
+                                            dataKey="practice"
+                                            tick={{ fill: '#000000', fontSize: 12, fontWeight: 500 }}
+                                        />
+                                        <PolarRadiusAxis
+                                            tick={{ fill: '#000000', fontSize: 10 }}
+                                            axisLine={false}
+                                        />
+                                        <Radar
+                                            name="得分"
+                                            dataKey="score"
+                                            stroke="rgb(225, 252, 74)"
+                                            strokeWidth={3}
+                                            fill="rgb(225, 252, 74)"
+                                            fillOpacity={0.2}
+                                            dot={{ fill: 'rgb(225, 252, 74)', strokeWidth: 2, r: 4 }}
+                                        />
+                                    </RadarChart>
+                                </ResponsiveContainer>
+                            )}
 
-                        {activeChart === 'pie' && (
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={pieData}
-                                        cx="50%"
-                                        cy="50%"
-                                        labelLine={false}
-                                        label={({ name, percent, value }) =>
-                                            (value || 0) > 0 ? `${name}\n${value || 0}分 (${((percent || 0) * 100).toFixed(0)}%)` : ''
-                                        }
-                                        outerRadius={100}
-                                        innerRadius={40}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                        paddingAngle={2}
-                                    >
-                                        {pieData.map((entry, index) => (
-                                            <RechartsCell
-                                                key={`cell-${index}`}
-                                                fill={entry.color}
-                                                stroke="#FFFFFF"
-                                                strokeWidth={2}
-                                            />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip
-                                        contentStyle={{
-                                            backgroundColor: '#FFFFFF',
-                                            border: '1px solid #E5E7EB',
-                                            borderRadius: '12px',
-                                            color: '#000000',
-                                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
-                                        }}
-                                        formatter={(value, name) => [`${value}分`, name]}
-                                    />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        )}
+                            {activeChart === 'pie' && (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={pieData}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            label={({ name, percent, value }) =>
+                                                (value || 0) > 0 ? `${name}\n${value || 0}分 (${((percent || 0) * 100).toFixed(0)}%)` : ''
+                                            }
+                                            outerRadius={100}
+                                            innerRadius={40}
+                                            fill="#8884d8"
+                                            dataKey="value"
+                                            paddingAngle={2}
+                                        >
+                                            {pieData.map((entry, index) => (
+                                                <RechartsCell
+                                                    key={`cell-${index}`}
+                                                    fill={entry.color}
+                                                    stroke="#FFFFFF"
+                                                    strokeWidth={2}
+                                                />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip
+                                            contentStyle={{
+                                                backgroundColor: '#FFFFFF',
+                                                border: '1px solid #E5E7EB',
+                                                borderRadius: '12px',
+                                                color: '#000000',
+                                                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
+                                            }}
+                                            formatter={(value, name) => [`${value}分`, name]}
+                                        />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            )}
 
-                        {activeChart === 'trend' && (
-                            <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={trendData}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" opacity={0.5} />
-                                    <XAxis
-                                        dataKey="date"
-                                        tick={{ fill: '#000000', fontSize: 12 }}
-                                        axisLine={false}
-                                        tickLine={false}
-                                    />
-                                    <YAxis
-                                        tick={{ fill: '#000000', fontSize: 12 }}
-                                        axisLine={false}
-                                        tickLine={false}
-                                    />
-                                    <Tooltip
-                                        contentStyle={{
-                                            backgroundColor: '#FFFFFF',
-                                            border: '1px solid #E5E7EB',
-                                            borderRadius: '12px',
-                                            color: '#000000',
-                                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
-                                        }}
-                                        formatter={(value) => [`${value}分`, '得分']}
-                                        labelFormatter={(label) => `日期: ${label}`}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="score"
-                                        stroke="#5BFFC2"
-                                        strokeWidth={4}
-                                        dot={{ fill: '#5BFFC2', strokeWidth: 2, r: 6 }}
-                                        activeDot={{ r: 8, stroke: '#5BFFC2', strokeWidth: 2 }}
-                                        fill="url(#gradient)"
-                                    />
-                                    <defs>
-                                        <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#5BFFC2" stopOpacity={0.4} />
-                                            <stop offset="95%" stopColor="#5BFFC2" stopOpacity={0.1} />
-                                        </linearGradient>
-                                    </defs>
-                                </LineChart>
-                            </ResponsiveContainer>
-                        )}
-                    </div>
-                </CardContent>
-            </Card>
+                            {activeChart === 'trend' && (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <LineChart data={trendData}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" opacity={0.5} />
+                                        <XAxis
+                                            dataKey="date"
+                                            tick={{ fill: '#000000', fontSize: 12 }}
+                                            axisLine={false}
+                                            tickLine={false}
+                                        />
+                                        <YAxis
+                                            tick={{ fill: '#000000', fontSize: 12 }}
+                                            axisLine={false}
+                                            tickLine={false}
+                                        />
+                                        <Tooltip
+                                            contentStyle={{
+                                                backgroundColor: '#FFFFFF',
+                                                border: '1px solid #E5E7EB',
+                                                borderRadius: '12px',
+                                                color: '#000000',
+                                                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
+                                            }}
+                                            formatter={(value) => [`${value}分`, '得分']}
+                                            labelFormatter={(label) => `日期: ${label}`}
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="score"
+                                            stroke="#5BFFC2"
+                                            strokeWidth={4}
+                                            dot={{ fill: '#5BFFC2', strokeWidth: 2, r: 6 }}
+                                            activeDot={{ r: 8, stroke: '#5BFFC2', strokeWidth: 2 }}
+                                            fill="url(#gradient)"
+                                        />
+                                        <defs>
+                                            <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#5BFFC2" stopOpacity={0.4} />
+                                                <stop offset="95%" stopColor="#5BFFC2" stopOpacity={0.1} />
+                                            </linearGradient>
+                                        </defs>
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
             {/* 清空数据按钮 */}
-            <Card className="glassmorphism">
-                <CardContent className="p-6">
-                    <div className="button-center">
-                        <Button
-                            variant="destructive"
-                            onClick={handleClearAllData}
-                            size="lg"
-                            className="delete-button"
-                        >
-                            清空所有数据
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
+            <div className="card-container">
+                <Card className="glassmorphism">
+                    <CardContent className="p-6">
+                        <div className="button-center">
+                            <Button
+                                variant="destructive"
+                                onClick={handleClearAllData}
+                                size="lg"
+                                className="delete-button"
+                            >
+                                清空所有数据
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
             {/* 清空确认对话框 */}
             <Dialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>

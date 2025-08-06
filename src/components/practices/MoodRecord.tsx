@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Textarea } from '../ui/textarea';
+import { MessageModal } from '../ui/modal';
 import type { MoodRecord, MoodType } from '../../types';
 import { storageService } from '../../services/storage';
 
@@ -30,6 +31,14 @@ export const MoodRecordComponent: React.FC<MoodRecordProps> = ({ onRecordAdded }
     const [note, setNote] = useState('');
     const [todayRecords, setTodayRecords] = useState<MoodRecord[]>([]);
 
+    // 弹窗状态
+    const [showModal, setShowModal] = useState(false);
+    const [modalConfig, setModalConfig] = useState({
+        title: '',
+        message: '',
+        type: 'info' as 'info' | 'success' | 'warning' | 'error'
+    });
+
     // 获取今天的心情记录
     useEffect(() => {
         const today = new Date();
@@ -55,7 +64,12 @@ export const MoodRecordComponent: React.FC<MoodRecordProps> = ({ onRecordAdded }
 
     const handleSubmit = () => {
         if (!selectedMood || !selectedTime) {
-            alert('请选择心情和时间段');
+            setModalConfig({
+                title: '提示',
+                message: '请选择心情和时间段',
+                type: 'warning'
+            });
+            setShowModal(true);
             return;
         }
 
@@ -79,7 +93,12 @@ export const MoodRecordComponent: React.FC<MoodRecordProps> = ({ onRecordAdded }
         // 通知父组件
         onRecordAdded?.();
 
-        alert('心情记录已保存！');
+        setModalConfig({
+            title: '成功',
+            message: '心情记录已保存！',
+            type: 'success'
+        });
+        setShowModal(true);
     };
 
     const formatTime = (timestamp: number) => {
@@ -99,122 +118,133 @@ export const MoodRecordComponent: React.FC<MoodRecordProps> = ({ onRecordAdded }
     };
 
     return (
-        <div className="space-y-6">
-            {/* 心情选择 */}
-            <Card className="glassmorphism">
-                <CardHeader>
-                    <CardTitle className="text-foreground">今天的心情如何？</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-5 gap-3">
-                        {moodOptions.map((option) => (
-                            <button
-                                key={option.value}
-                                onClick={() => setSelectedMood(option.value)}
-                                className={`p-4 rounded-2xl border-2 mood-option ${selectedMood === option.value
-                                    ? 'border-primary bg-primary/10 selected'
-                                    : 'border-border hover:border-primary/50'
-                                    }`}
-                                style={{ borderColor: selectedMood === option.value ? option.color : undefined }}
-                            >
-                                <div className="text-3xl mb-2">{option.emoji}</div>
-                                <div className="text-xs font-medium text-foreground">{option.label}</div>
-                            </button>
-                        ))}
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* 时间选择 */}
-            <Card className="glassmorphism">
-                <CardHeader>
-                    <CardTitle className="text-foreground">记录时间</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-4 gap-3">
-                        {timeOptions.map((option) => (
-                            <button
-                                key={option.value}
-                                onClick={() => setSelectedTime(option.value)}
-                                className={`p-3 rounded-xl border-2 time-option ${selectedTime === option.value
-                                    ? 'border-primary bg-primary/10 selected'
-                                    : 'border-border hover:border-primary/50'
-                                    }`}
-                            >
-                                <div className="text-2xl mb-1">{option.icon}</div>
-                                <div className="text-xs font-medium text-foreground">{option.label}</div>
-                            </button>
-                        ))}
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* 备注 */}
-            <Card className="glassmorphism">
-                <CardHeader>
-                    <CardTitle className="text-foreground">备注（可选）</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <Textarea
-                        placeholder="记录一下此刻的想法..."
-                        value={note}
-                        onChange={(e) => setNote(e.target.value)}
-                        className="custom-textarea min-h-[100px]"
-                        maxLength={200}
-                    />
-                    <div className="text-xs text-muted mt-2 text-right">
-                        {note.length}/200
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* 提交按钮 */}
-            <div className="button-center">
-                <Button
-                    onClick={handleSubmit}
-                    size="lg"
-                    className="custom-button"
-                    variant="default"
-                    disabled={!selectedMood || !selectedTime}
-                >
-                    记录心情
-                </Button>
-            </div>
-
-            {/* 今日记录 */}
-            {todayRecords.length > 0 && (
+        <>
+            <div className="space-y-6">
+                {/* 心情选择 */}
                 <Card className="glassmorphism">
                     <CardHeader>
-                        <CardTitle className="text-foreground">今日心情记录</CardTitle>
+                        <CardTitle className="text-foreground">今天的心情如何？</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="space-y-3">
-                            {todayRecords.map((record) => (
-                                <div key={record.id} className="flex items-center justify-between p-3 bg-white/50 rounded-xl">
-                                    <div className="flex items-center space-x-3">
-                                        <span className="text-2xl">
-                                            {moodOptions.find(option => option.value === record.mood)?.emoji}
-                                        </span>
-                                        <div>
-                                            <div className="font-medium text-foreground">
-                                                {getMoodLabel(record.mood)}
-                                            </div>
-                                            <div className="text-xs text-muted">
-                                                {getTimeLabel(record.timeOfDay)} · {formatTime(record.timestamp)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {record.note && (
-                                        <div className="text-sm text-muted max-w-[150px] truncate">
-                                            {record.note}
-                                        </div>
-                                    )}
-                                </div>
+                        <div className="grid grid-cols-5 gap-3">
+                            {moodOptions.map((option) => (
+                                <button
+                                    key={option.value}
+                                    onClick={() => setSelectedMood(option.value)}
+                                    className={`p-4 rounded-2xl border-2 mood-option ${selectedMood === option.value
+                                        ? 'border-primary bg-primary/10 selected'
+                                        : 'border-border hover:border-primary/50'
+                                        }`}
+                                    style={{ borderColor: selectedMood === option.value ? option.color : undefined }}
+                                >
+                                    <div className="text-3xl mb-2">{option.emoji}</div>
+                                    <div className="text-xs font-medium text-foreground">{option.label}</div>
+                                </button>
                             ))}
                         </div>
                     </CardContent>
                 </Card>
-            )}
-        </div>
+
+                {/* 时间选择 */}
+                <Card className="glassmorphism">
+                    <CardHeader>
+                        <CardTitle className="text-foreground">记录时间</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-4 gap-3">
+                            {timeOptions.map((option) => (
+                                <button
+                                    key={option.value}
+                                    onClick={() => setSelectedTime(option.value)}
+                                    className={`p-3 rounded-xl border-2 time-option ${selectedTime === option.value
+                                        ? 'border-primary bg-primary/10 selected'
+                                        : 'border-border hover:border-primary/50'
+                                        }`}
+                                >
+                                    <div className="text-2xl mb-1">{option.icon}</div>
+                                    <div className="text-xs font-medium text-foreground">{option.label}</div>
+                                </button>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* 备注 */}
+                <Card className="glassmorphism">
+                    <CardHeader>
+                        <CardTitle className="text-foreground">备注（可选）</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Textarea
+                            placeholder="记录一下此刻的想法..."
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            className="custom-textarea min-h-[100px]"
+                            maxLength={200}
+                        />
+                        <div className="text-xs text-muted mt-2 text-right">
+                            {note.length}/200
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* 提交按钮 */}
+                <div className="button-center">
+                    <Button
+                        onClick={handleSubmit}
+                        size="lg"
+                        className="custom-button"
+                        variant="default"
+                        disabled={!selectedMood || !selectedTime}
+                    >
+                        记录心情
+                    </Button>
+                </div>
+
+                {/* 今日记录 */}
+                {todayRecords.length > 0 && (
+                    <Card className="glassmorphism">
+                        <CardHeader>
+                            <CardTitle className="text-foreground">今日心情记录</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-3">
+                                {todayRecords.map((record) => (
+                                    <div key={record.id} className="flex items-center justify-between p-3 bg-white/50 rounded-xl">
+                                        <div className="flex items-center space-x-3">
+                                            <span className="text-2xl">
+                                                {moodOptions.find(option => option.value === record.mood)?.emoji}
+                                            </span>
+                                            <div>
+                                                <div className="font-medium text-foreground">
+                                                    {getMoodLabel(record.mood)}
+                                                </div>
+                                                <div className="text-xs text-muted">
+                                                    {getTimeLabel(record.timeOfDay)} · {formatTime(record.timestamp)}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {record.note && (
+                                            <div className="text-sm text-muted max-w-[150px] truncate">
+                                                {record.note}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
+
+            {/* 自定义弹窗 */}
+            <MessageModal
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                type={modalConfig.type}
+            />
+        </>
     );
 }; 

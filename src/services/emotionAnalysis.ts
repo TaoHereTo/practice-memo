@@ -39,8 +39,8 @@ export class EmotionAnalysisService {
 
     // 判定情绪象限
     static determineQuadrant(paScore: number, naScore: number): EmotionQuadrant {
-        const paThreshold = 30; // 以30分为分界线
-        const naThreshold = 30;
+        const paThreshold = 12; // 调整为适合4个积极情感项目的阈值 (4项 * 3分 = 12分)
+        const naThreshold = 12; // 调整为适合4个消极情感项目的阈值 (4项 * 3分 = 12分)
 
         if (paScore >= paThreshold && naScore < naThreshold) {
             return 'energetic'; // 活力四射区

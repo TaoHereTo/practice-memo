@@ -1,28 +1,16 @@
-// PANAS 20项评估词汇数据
+// PANAS 8项评估词汇数据
 export const panasItems = [
-    // 积极情感 (PA) - 10项
-    { key: 'interested', label: '感兴趣的', type: 'positive', dimension: 'focusEngagement' },
+    // 积极情感 (PA) - 4项
     { key: 'excited', label: '兴奋的', type: 'positive', dimension: 'vitalityEnthusiasm' },
-    { key: 'strong', label: '坚强的', type: 'positive', dimension: 'confidenceStrength' },
     { key: 'enthusiastic', label: '富有激情的', type: 'positive', dimension: 'vitalityEnthusiasm' },
-    { key: 'proud', label: '自豪的', type: 'positive', dimension: 'confidenceStrength' },
     { key: 'alert', label: '敏感的', type: 'positive', dimension: 'focusEngagement' },
-    { key: 'inspired', label: '受启发的', type: 'positive', dimension: 'confidenceStrength' },
-    { key: 'determined', label: '坚定的', type: 'positive', dimension: 'confidenceStrength' },
     { key: 'attentive', label: '专注的', type: 'positive', dimension: 'focusEngagement' },
-    { key: 'active', label: '活跃的', type: 'positive', dimension: 'vitalityEnthusiasm' },
 
-    // 消极情感 (NA) - 10项
+    // 消极情感 (NA) - 4项
     { key: 'distressed', label: '心烦意乱的', type: 'negative', dimension: 'irritabilityHostility' },
     { key: 'upset', label: '烦躁的', type: 'negative', dimension: 'irritabilityHostility' },
-    { key: 'guilty', label: '内疚的', type: 'negative', dimension: 'guiltShame' },
-    { key: 'scared', label: '害怕的', type: 'negative', dimension: 'anxietyFear' },
-    { key: 'hostile', label: '充满敌意的', type: 'negative', dimension: 'irritabilityHostility' },
-    { key: 'irritable', label: '易怒的', type: 'negative', dimension: 'irritabilityHostility' },
-    { key: 'ashamed', label: '羞愧的', type: 'negative', dimension: 'guiltShame' },
     { key: 'nervous', label: '紧张不安的', type: 'negative', dimension: 'anxietyFear' },
-    { key: 'jittery', label: '心神不宁的', type: 'negative', dimension: 'anxietyFear' },
-    { key: 'afraid', label: '恐惧的', type: 'negative', dimension: 'anxietyFear' }
+    { key: 'jittery', label: '心神不宁的', type: 'negative', dimension: 'anxietyFear' }
 ];
 
 // 评分说明
