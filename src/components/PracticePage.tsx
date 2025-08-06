@@ -4,7 +4,6 @@ import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from './ui/
 import { PhoneAwayPractice } from './practices/PhoneAwayPractice';
 import { TextInputPractice } from './practices/TextInputPractice';
 import { MeditationPractice } from './practices/MeditationPractice';
-import { EMACapture } from './practices/EMACapture';
 import { HistoryRecords } from './practices/HistoryRecords';
 import { practiceData } from '../data/practiceData';
 import type { PracticeRecord } from '../types';
@@ -118,10 +117,6 @@ export const PracticePage: React.FC = () => {
                                                     practiceId={practice.id}
                                                     title={practice.title}
                                                     content={practice.content}
-                                                />
-                                            ) : practice.id === 'practice_6' ? (
-                                                <EMACapture
-                                                    onRecordAdded={() => handleRecordAdded({} as PracticeRecord)}
                                                 />
                                             ) : null}
                                         </div>

@@ -1,5 +1,5 @@
-/* 字体配置 - 使用系统字体作为备选方案 */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+/* 字体配置 - 思源宋体 + Times New Roman */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -82,13 +82,69 @@
 
   body {
     margin: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    /* 中文字体：思源宋体，英文字体：Times New Roman */
+    font-family: 'Noto Serif SC', 'Times New Roman', Times, serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #F3F4F6;
     color: #000000;
     overflow-x: hidden;
     height: auto;
+  }
+
+  /* 确保数字也使用 Times New Roman */
+  input[type="number"],
+  .score-number,
+  .time-display,
+  .duration-display {
+    font-family: 'Times New Roman', Times, serif !important;
+  }
+
+  /* 英文文本使用 Times New Roman */
+  .english-text {
+    font-family: 'Times New Roman', Times, serif !important;
+  }
+
+  /* 中文文本使用思源宋体 */
+  .chinese-text {
+    font-family: 'Noto Serif SC', serif !important;
+  }
+
+  /* 字体类定义 */
+  .font-chinese {
+    font-family: 'Noto Serif SC', serif !important;
+  }
+
+  .font-english {
+    font-family: 'Times New Roman', Times, serif !important;
+  }
+
+  .font-mixed {
+    font-family: 'Noto Serif SC', 'Times New Roman', Times, serif !important;
+  }
+
+  .font-default {
+    font-family: 'Noto Serif SC', 'Times New Roman', Times, serif !important;
+  }
+
+  /* 确保特定元素使用正确的字体 */
+  .score-number,
+  .time-display,
+  .duration-display,
+  .progress-text {
+    font-family: 'Times New Roman', Times, serif !important;
+  }
+
+  /* 标题和主要内容使用思源宋体 */
+  .main-title,
+  .card-title,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Noto Serif SC', serif !important;
   }
 }
 

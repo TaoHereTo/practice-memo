@@ -30,11 +30,5 @@ export const practiceData: PracticeData[] = [
         title: '心灵小憩',
         tabTitle: '心灵小憩',
         content: '安抚应激的身体，重建专注力。当内心焦躁时，用深度呼吸让心跳平复。'
-    },
-    {
-        id: 'practice_6',
-        title: '情绪记录',
-        tabTitle: '情绪记录',
-        content: '实时捕捉情绪状态。通过分步记录，了解自己的情绪模式和触发因素。'
     }
 ]; 

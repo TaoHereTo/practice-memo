@@ -13,17 +13,59 @@ export const DailyMoodReviewComponent: React.FC = () => {
     const [scores, setScores] = useState<{ [key: string]: number }>({});
     const [isCompleted, setIsCompleted] = useState(false);
     const [todayReview, setTodayReview] = useState<DailyMoodReview | null>(null);
+    const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
 
-    const today = new Date().toISOString().split('T')[0];
+    // 获取当前日期
+    const getCurrentDate = () => {
+        return new Date().toISOString().split('T')[0];
+    };
 
-    // 检查今日是否已完成评估
+    // 检查今日是否已完成评估，并监听日期变化
     useEffect(() => {
-        const existingReview = storageService.getDailyReviewByDate(today);
-        if (existingReview) {
-            setTodayReview(existingReview);
-            setIsCompleted(true);
-        }
-    }, [today]);
+        const checkDailyReview = () => {
+            const today = getCurrentDate();
+
+            // 如果日期发生变化，重置状态
+            if (today !== currentDate) {
+                setCurrentDate(today);
+                setIsCompleted(false);
+                setTodayReview(null);
+                setScores({});
+                setCurrentStep(0);
+            }
+
+            // 检查今日是否已有评估
+            const existingReview = storageService.getDailyReviewByDate(today);
+            if (existingReview) {
+                setTodayReview(existingReview);
+                setIsCompleted(true);
+            } else {
+                // 如果没有今日评估，确保状态是未完成
+                setIsCompleted(false);
+                setTodayReview(null);
+            }
+        };
+
+        // 初始检查
+        checkDailyReview();
+
+        // 设置定时器，每分钟检查一次日期变化
+        const interval = setInterval(checkDailyReview, 60000);
+
+        // 监听页面可见性变化，当页面重新可见时检查日期
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                checkDailyReview();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            clearInterval(interval);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, [currentDate]);
 
     // 处理评分变化
     const handleScoreChange = (itemKey: string, score: number) => {
@@ -44,6 +86,8 @@ export const DailyMoodReviewComponent: React.FC = () => {
 
     // 提交评估
     const handleSubmit = () => {
+        const today = getCurrentDate();
+
         // 计算PANAS指标
         const panasScores = EmotionAnalysisService.calculatePANASScores(scores);
 
