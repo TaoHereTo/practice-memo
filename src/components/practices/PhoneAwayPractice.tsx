@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'tdesign-mobile-react';
+import { Button } from '../ui/button';
 import type { PhoneAwayState, PracticeRecord } from '../../types';
 import { storageService } from '../../services/storage';
 
@@ -119,13 +119,13 @@ export const PhoneAwayPractice: React.FC<PhoneAwayPracticeProps> = ({
     return (
         <div className="record-center">
             {/* 描述 */}
-            <div className="text-gray-600 mb-6 text-center">{content}</div>
+            <div className="text-muted-foreground mb-6 text-center">{content}</div>
 
             {/* 计时器显示 */}
             <div className="text-4xl font-mono font-bold text-blue-500 mb-2 number">
                 {displayTime}
             </div>
-            <div className="text-sm text-gray-500 mb-6">
+            <div className="text-sm text-muted-foreground mb-6">
                 今日累计得分: <span className="number">{todayScore}</span>分
             </div>
 
@@ -133,17 +133,16 @@ export const PhoneAwayPractice: React.FC<PhoneAwayPracticeProps> = ({
             <div className="button-center">
                 {!state.isRunning ? (
                     <Button
-                        theme="primary"
-                        size="large"
                         onClick={handleStart}
+                        size="lg"
                     >
                         {state.totalTime > 0 ? '继续远离' : '开始远离'}
                     </Button>
                 ) : (
                     <Button
-                        theme="default"
-                        size="large"
+                        variant="outline"
                         onClick={handlePause}
+                        size="lg"
                     >
                         暂停
                     </Button>
@@ -151,9 +150,8 @@ export const PhoneAwayPractice: React.FC<PhoneAwayPracticeProps> = ({
 
                 {state.totalTime > 0 && (
                     <Button
-                        theme="primary"
-                        size="large"
                         onClick={handleComplete}
+                        size="lg"
                     >
                         完成并记录
                     </Button>

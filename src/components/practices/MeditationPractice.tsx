@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Popup, Input } from 'tdesign-mobile-react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import type { MeditationState, PracticeRecord } from '../../types';
 import { storageService } from '../../services/storage';
 
@@ -145,7 +147,7 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
     return (
         <div className="record-center">
             {/* 描述 */}
-            <div className="text-gray-600 mb-6 text-center">{content}</div>
+            <div className="text-muted-foreground mb-6 text-center">{content}</div>
 
             {/* 计时器显示 */}
             {state.duration > 0 && (
@@ -153,7 +155,7 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                     <div className="text-4xl font-mono font-bold text-blue-500 mb-2 number">
                         {formatTime(state.remainingTime)}
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-muted-foreground">
                         总时长: <span className="number">{formatTime(state.duration)}</span>
                     </div>
                 </div>
@@ -163,21 +165,53 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
             <div className="button-center">
                 {!state.isRunning && state.duration === 0 && (
                     <>
+                        <Dialog open={showDurationSelect} onOpenChange={setShowDurationSelect}>
+                            <DialogTrigger asChild>
+                                <Button size="lg">
+                                    开始冥想
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>选择心灵小憩时长</DialogTitle>
+                                </DialogHeader>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-muted-foreground mb-2">
+                                            时长（分钟）
+                                        </label>
+                                        <Input
+                                            value={selectedDuration}
+                                            onChange={(e) => setSelectedDuration(e.target.value)}
+                                            type="number"
+                                            placeholder="请输入时长"
+                                        />
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => setShowDurationSelect(false)}
+                                            className="flex-1"
+                                        >
+                                            取消
+                                        </Button>
+                                        <Button
+                                            onClick={handleStartMeditation}
+                                            className="flex-1"
+                                        >
+                                            开始
+                                        </Button>
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                         <Button
-                            theme="primary"
-                            size="large"
-                            onClick={() => setShowDurationSelect(true)}
-                        >
-                            开始冥想
-                        </Button>
-                        <Button
-                            theme="primary"
-                            size="large"
                             onClick={handleManualComplete}
                             disabled={showSuccess}
                             className="success-button"
+                            size="lg"
                         >
-                            {showSuccess ? '✓ 保存成功' : '我已完成其他冥想，直接+1分'}
+                            {showSuccess ? '✓ 保存成功' : '我已完成其他心灵小憩，直接+1分'}
                         </Button>
                     </>
                 )}
@@ -185,16 +219,16 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                 {state.isRunning && (
                     <>
                         <Button
-                            theme="default"
-                            size="large"
+                            variant="outline"
                             onClick={handlePause}
+                            size="lg"
                         >
                             暂停
                         </Button>
                         <Button
-                            theme="danger"
-                            size="large"
+                            variant="destructive"
                             onClick={handleGiveUp}
+                            size="lg"
                         >
                             放弃
                         </Button>
@@ -204,62 +238,21 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                 {!state.isRunning && state.duration > 0 && state.remainingTime > 0 && (
                     <>
                         <Button
-                            theme="primary"
-                            size="large"
                             onClick={handleResume}
+                            size="lg"
                         >
                             继续冥想
                         </Button>
                         <Button
-                            theme="danger"
-                            size="large"
+                            variant="destructive"
                             onClick={handleGiveUp}
+                            size="lg"
                         >
                             放弃
                         </Button>
                     </>
                 )}
             </div>
-
-            {/* 时长选择弹窗 */}
-            <Popup
-                visible={showDurationSelect}
-                onClose={() => setShowDurationSelect(false)}
-                placement="bottom"
-                showOverlay
-            >
-                <div className="p-6 bg-white rounded-t-lg">
-                    <h3 className="text-lg font-semibold mb-4">选择冥想时长</h3>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            时长（分钟）
-                        </label>
-                        <Input
-                            value={selectedDuration}
-                            onChange={(value) => setSelectedDuration(String(value))}
-                            type="number"
-                            placeholder="请输入时长"
-                            className="w-full"
-                        />
-                    </div>
-                    <div className="flex gap-3">
-                        <Button
-                            theme="default"
-                            block
-                            onClick={() => setShowDurationSelect(false)}
-                        >
-                            取消
-                        </Button>
-                        <Button
-                            theme="primary"
-                            block
-                            onClick={handleStartMeditation}
-                        >
-                            开始
-                        </Button>
-                    </div>
-                </div>
-            </Popup>
         </div>
     );
 }; 

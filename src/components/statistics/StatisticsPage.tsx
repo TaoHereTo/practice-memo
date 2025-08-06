@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Dialog } from 'tdesign-mobile-react';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import type { TimeRange, PracticeRecord } from '../../types';
 import { storageService } from '../../services/storage';
 import { practiceData } from '../../data/practiceData';
@@ -99,10 +102,6 @@ export const StatisticsPage: React.FC = () => {
         return trendData;
     };
 
-    const radarData = getRadarData();
-    const pieData = getPieData();
-    const trendData = getTrendData();
-
     const handleClearAllData = () => {
         setShowClearConfirm(true);
     };
@@ -112,193 +111,162 @@ export const StatisticsPage: React.FC = () => {
         setRecords([]);
         setTotalScore(0);
         setShowClearConfirm(false);
-
-        // 触发全局事件，通知其他组件数据已清空
-        const event = new CustomEvent('dataCleared');
-        window.dispatchEvent(event);
     };
+
+    const radarData = getRadarData();
+    const pieData = getPieData();
+    const trendData = getTrendData();
 
     return (
         <div className="p-4 md:p-6 max-w-4xl mx-auto pb-20 md:pb-6">
             {/* 时间范围选择器 */}
-            <div className="card">
-                <div className="card-title">时间范围</div>
-                <div className="glassmorphism-tabbar">
-                    <div className="flex overflow-x-auto no-scrollbar">
-                        {(['today', 'week', 'month'] as const).map((range) => (
-                            <Button
-                                key={range}
-                                theme={timeRange === range ? "primary" : "default"}
-                                size="small"
-                                onClick={() => setTimeRange(range)}
-                                style={{
-                                    flex: '1 0 auto',
-                                    fontSize: '12px',
-                                    padding: '8px 4px',
-                                    borderRadius: '8px',
-                                    margin: '0 2px',
-                                    whiteSpace: 'nowrap',
-                                    minWidth: '0'
-                                }}
-                            >
-                                {range === 'today' ? '今日' : range === 'week' ? '本周' : '本月'}
-                            </Button>
-                        ))}
-                    </div>
-                </div>
-            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>时间范围</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as TimeRange)} className="w-full">
+                        <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="today">今日</TabsTrigger>
+                            <TabsTrigger value="week">本周</TabsTrigger>
+                            <TabsTrigger value="month">本月</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
+                </CardContent>
+            </Card>
 
             {/* 总分卡片 */}
-            <div className="card">
-                <div className="card-title">总得分</div>
-                <div className="text-center py-4">
-                    <div className="text-4xl font-bold text-blue-500">{totalScore}</div>
-                    <div className="text-sm text-gray-500">分</div>
-                </div>
-            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>总得分</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="text-center py-4">
+                        <div className="text-4xl font-bold text-blue-500">{totalScore}</div>
+                        <div className="text-sm text-muted-foreground">分</div>
+                    </div>
+                </CardContent>
+            </Card>
 
             {/* 图表切换 */}
-            <div className="card">
-                <div className="card-title">数据图表</div>
-                <div className="glassmorphism-tabbar">
-                    <div className="flex overflow-x-auto no-scrollbar">
-                        <Button
-                            theme={activeChart === 'radar' ? "primary" : "default"}
-                            size="small"
-                            onClick={() => setActiveChart('radar')}
-                            style={{
-                                flex: '1 0 auto',
-                                fontSize: '12px',
-                                padding: '8px 4px',
-                                borderRadius: '8px',
-                                margin: '0 2px',
-                                whiteSpace: 'nowrap',
-                                minWidth: '0'
-                            }}
-                        >
-                            练习分布
-                        </Button>
-                        <Button
-                            theme={activeChart === 'pie' ? "primary" : "default"}
-                            size="small"
-                            onClick={() => setActiveChart('pie')}
-                            style={{
-                                flex: '1 0 auto',
-                                fontSize: '12px',
-                                padding: '8px 4px',
-                                borderRadius: '8px',
-                                margin: '0 2px',
-                                whiteSpace: 'nowrap',
-                                minWidth: '0'
-                            }}
-                        >
-                            饼状图
-                        </Button>
-                        <Button
-                            theme={activeChart === 'trend' ? "primary" : "default"}
-                            size="small"
-                            onClick={() => setActiveChart('trend')}
-                            style={{
-                                flex: '1 0 auto',
-                                fontSize: '12px',
-                                padding: '8px 4px',
-                                borderRadius: '8px',
-                                margin: '0 2px',
-                                whiteSpace: 'nowrap',
-                                minWidth: '0'
-                            }}
-                        >
-                            得分趋势
-                        </Button>
-                    </div>
-                </div>
-            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>数据图表</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Tabs value={activeChart} onValueChange={setActiveChart} className="w-full">
+                        <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="radar">练习分布</TabsTrigger>
+                            <TabsTrigger value="pie">饼状图</TabsTrigger>
+                            <TabsTrigger value="trend">得分趋势</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
+                </CardContent>
+            </Card>
 
             {/* 图表区域 */}
-            <div className="card">
-                <div className="h-80">
-                    {activeChart === 'radar' && (
-                        <ResponsiveContainer width="100%" height="100%">
-                            <RadarChart data={radarData}>
-                                <PolarGrid />
-                                <PolarAngleAxis dataKey="practice" />
-                                <PolarRadiusAxis />
-                                <Radar
-                                    name="得分"
-                                    dataKey="score"
-                                    stroke="#0052d9"
-                                    fill="#0052d9"
-                                    fillOpacity={0.6}
-                                />
-                            </RadarChart>
-                        </ResponsiveContainer>
-                    )}
+            <Card>
+                <CardContent className="p-6">
+                    <div className="h-80">
+                        {activeChart === 'radar' && (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <RadarChart data={radarData}>
+                                    <PolarGrid />
+                                    <PolarAngleAxis dataKey="practice" />
+                                    <PolarRadiusAxis />
+                                    <Radar
+                                        name="得分"
+                                        dataKey="score"
+                                        stroke="#0052d9"
+                                        fill="#0052d9"
+                                        fillOpacity={0.6}
+                                    />
+                                </RadarChart>
+                            </ResponsiveContainer>
+                        )}
 
-                    {activeChart === 'pie' && (
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={pieData}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={false}
-                                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
-                                    outerRadius={80}
-                                    fill="#8884d8"
-                                    dataKey="value"
-                                >
-                                    {pieData.map((entry, index) => (
-                                        <RechartsCell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    )}
+                        {activeChart === 'pie' && (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={pieData}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={false}
+                                        label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        {pieData.map((entry, index) => (
+                                            <RechartsCell key={`cell-${index}`} fill={entry.color} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        )}
 
-                    {activeChart === 'trend' && (
-                        <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={trendData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="date" />
-                                <YAxis />
-                                <Tooltip />
-                                <Line
-                                    type="monotone"
-                                    dataKey="score"
-                                    stroke="#0052d9"
-                                    strokeWidth={2}
-                                />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    )}
-                </div>
-            </div>
+                        {activeChart === 'trend' && (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={trendData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="date" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="score"
+                                        stroke="#0052d9"
+                                        strokeWidth={2}
+                                    />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
 
             {/* 清空数据按钮 */}
-            <div className="card">
-                <div className="button-center">
-                    <Button
-                        theme="danger"
-                        size="large"
-                        onClick={handleClearAllData}
-                        className="delete-button"
-                    >
-                        清空所有数据
-                    </Button>
-                </div>
-            </div>
+            <Card>
+                <CardContent className="p-6">
+                    <div className="button-center">
+                        <Button
+                            variant="destructive"
+                            onClick={handleClearAllData}
+                            size="lg"
+                        >
+                            清空所有数据
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
 
             {/* 清空确认对话框 */}
-            <Dialog
-                visible={showClearConfirm}
-                onClose={() => setShowClearConfirm(false)}
-                title="确认清空"
-                content="确定要清空所有练习记录吗？此操作不可恢复，所有数据将被永久删除。"
-                confirmBtn="清空"
-                cancelBtn="取消"
-                onConfirm={handleClearConfirm}
-            />
+            <Dialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>确认清空</DialogTitle>
+                        <DialogDescription>
+                            确定要清空所有练习记录吗？此操作不可恢复，所有数据将被永久删除。
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowClearConfirm(false)}
+                        >
+                            取消
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={handleClearConfirm}
+                        >
+                            清空
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }; 

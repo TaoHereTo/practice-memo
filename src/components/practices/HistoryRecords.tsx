@@ -1,105 +1,99 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button, Tag, Checkbox, Dialog } from 'tdesign-mobile-react';
+import React, { useState, useEffect } from 'react';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import type { PracticeRecord } from '../../types';
 import { storageService } from '../../services/storage';
+import { practiceData } from '../../data/practiceData';
 
 interface HistoryRecordsProps {
     practiceId: string;
-    onRecordAdded?: (record: PracticeRecord) => void;
 }
 
 export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
-    practiceId,
-    onRecordAdded
+    practiceId
 }) => {
     const [records, setRecords] = useState<PracticeRecord[]>([]);
     const [selectedRecords, setSelectedRecords] = useState<Set<string>>(new Set());
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const checkboxRef = useRef<HTMLDivElement>(null);
+
+    const practice = practiceData.find(p => p.id === practiceId);
 
     // 加载历史记录
     useEffect(() => {
-        const practiceRecords = storageService.getRecordsByPractice(practiceId);
-        setRecords(practiceRecords.sort((a, b) => b.timestamp - a.timestamp));
-    }, [practiceId]);
-
-    // 监听新记录添加
-    useEffect(() => {
-        const handleStorageChange = () => {
+        const loadRecords = () => {
             const practiceRecords = storageService.getRecordsByPractice(practiceId);
             setRecords(practiceRecords.sort((a, b) => b.timestamp - a.timestamp));
         };
 
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
+        loadRecords();
+
+        // 监听新记录添加事件
+        const handleRecordAdded = () => {
+            loadRecords();
+        };
+
+        window.addEventListener('recordAdded', handleRecordAdded);
+        return () => {
+            window.removeEventListener('recordAdded', handleRecordAdded);
+        };
     }, [practiceId]);
 
-    // 监听父组件传递的新记录
-    useEffect(() => {
-        if (onRecordAdded) {
-            const handleNewRecord = (record: PracticeRecord) => {
-                if (record.practiceId === practiceId) {
-                    setRecords(prev => [record, ...prev]);
-                }
-            };
-
-            // 这里我们需要一个全局事件监听器来捕获新记录
-            const handleGlobalRecordAdded = (event: CustomEvent) => {
-                const record = event.detail;
-                handleNewRecord(record);
-            };
-
-            window.addEventListener('recordAdded', handleGlobalRecordAdded as EventListener);
-            return () => window.removeEventListener('recordAdded', handleGlobalRecordAdded as EventListener);
+    // 删除选中的记录
+    const handleDeleteSelected = () => {
+        if (selectedRecords.size === 0) {
+            alert('请先选择要删除的记录');
+            return;
         }
-    }, [practiceId, onRecordAdded]);
 
-    // 检查checkbox的DOM结构
-    useEffect(() => {
-        if (checkboxRef.current) {
-            console.log('Checkbox DOM structure:', checkboxRef.current.innerHTML);
-            console.log('Checkbox classes:', checkboxRef.current.className);
+        if (confirm(`确定要删除选中的 ${selectedRecords.size} 条记录吗？`)) {
+            selectedRecords.forEach(recordId => {
+                storageService.deleteRecord(recordId);
+            });
+            setSelectedRecords(new Set());
+            setRecords(prev => prev.filter(record => !selectedRecords.has(record.id)));
         }
-    }, []);
+    };
 
-    const handleCheckboxChange = (recordId: string, checked: boolean) => {
-        const newSelected = new Set(selectedRecords);
-        if (checked) {
-            newSelected.add(recordId);
+    // 删除所有记录
+    const handleDeleteAll = () => {
+        if (records.length === 0) {
+            alert('没有记录可删除');
+            return;
+        }
+
+        if (confirm(`确定要删除所有 ${records.length} 条记录吗？`)) {
+            records.forEach(record => {
+                storageService.deleteRecord(record.id);
+            });
+            setSelectedRecords(new Set());
+            setRecords([]);
+        }
+    };
+
+    // 全选/取消全选
+    const handleSelectAll = () => {
+        if (selectedRecords.size === records.length) {
+            setSelectedRecords(new Set());
         } else {
+            setSelectedRecords(new Set(records.map(record => record.id)));
+        }
+    };
+
+    // 切换记录选择状态
+    const toggleRecordSelection = (recordId: string) => {
+        const newSelected = new Set(selectedRecords);
+        if (newSelected.has(recordId)) {
             newSelected.delete(recordId);
+        } else {
+            newSelected.add(recordId);
         }
         setSelectedRecords(newSelected);
     };
 
-    const handleSelectAll = (checked: boolean) => {
-        if (checked) {
-            setSelectedRecords(new Set(records.map(record => record.id)));
-        } else {
-            setSelectedRecords(new Set());
-        }
-    };
-
-    const handleDeleteClick = () => {
-        if (selectedRecords.size === 0) return;
-        setShowDeleteConfirm(true);
-    };
-
-    const handleDeleteConfirm = () => {
-        // 从存储中删除选中的记录
-        selectedRecords.forEach(recordId => {
-            storageService.deleteRecord(recordId);
-        });
-
-        // 从本地状态中移除选中的记录
-        setRecords(prev => prev.filter(record => !selectedRecords.has(record.id)));
-        setSelectedRecords(new Set());
-        setShowDeleteConfirm(false);
-    };
-
-    const formatDate = (timestamp: number): string => {
+    // 格式化日期
+    const formatDate = (timestamp: number) => {
         const date = new Date(timestamp);
         return date.toLocaleDateString('zh-CN', {
+            year: 'numeric',
             month: 'short',
             day: 'numeric',
             hour: '2-digit',
@@ -107,77 +101,83 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
         });
     };
 
-    if (records.length === 0) {
-        return null;
-    }
+    if (!practice) return null;
 
     return (
-        <>
-            <div className="card w-full">
-                <div className="flex justify-between items-center mb-4">
-                    <div className="card-title">历史记录</div>
-                    <div className="flex items-center gap-3">
-                        <div ref={checkboxRef}>
-                            <Checkbox
-                                checked={selectedRecords.size === records.length && records.length > 0}
-                                indeterminate={selectedRecords.size > 0 && selectedRecords.size < records.length}
-                                onChange={handleSelectAll}
-                            >
-                                全选
-                            </Checkbox>
-                        </div>
-                        <Button
-                            theme="danger"
-                            size="small"
-                            onClick={handleDeleteClick}
-                            disabled={selectedRecords.size === 0}
-                            className="delete-button"
-                        >
-                            {selectedRecords.size === 0 ? '删除' : `删除(${selectedRecords.size})`}
-                        </Button>
+        <Card>
+            <CardHeader>
+                <CardTitle>{practice.tabTitle} - 历史记录</CardTitle>
+            </CardHeader>
+            <CardContent>
+                {records.length === 0 ? (
+                    <div className="text-center text-muted-foreground py-8">
+                        暂无记录
                     </div>
-                </div>
-                <div className="space-y-0 max-h-60 overflow-y-auto w-full">
-                    {records.map((record, index) => (
-                        <div
-                            key={record.id}
-                            className={`history-item w-full ${selectedRecords.has(record.id) ? 'selected' : ''}`}
-                        >
-                            <div className="flex items-center gap-1 py-1">
-                                <div className="flex-shrink-0">
-                                    <Checkbox
-                                        checked={selectedRecords.has(record.id)}
-                                        onChange={(checked) => handleCheckboxChange(record.id, checked)}
-                                    />
-                                </div>
-                                <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-xs text-gray-500 number">
-                                            {formatDate(record.timestamp)}
-                                        </span>
-                                        <Tag theme="primary" variant="light" className="flex-shrink-0">
-                                            +<span className="number">{record.score}</span>分
-                                        </Tag>
-                                    </div>
-                                    <p className="text-sm text-gray-800 break-words">{record.content}</p>
-                                </div>
-                            </div>
-                            {index < records.length - 1 && <div className="divider my-0" />}
-                        </div>
-                    ))}
-                </div>
-            </div>
+                ) : (
+                    <>
+                        {/* 操作按钮 - 一直显示 */}
+                        <div className="history-actions mb-4 flex gap-2 flex-wrap">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleSelectAll}
+                            >
+                                {selectedRecords.size === records.length ? '取消全选' : '全选'}
+                            </Button>
 
-            {/* 删除确认对话框 */}
-            <Dialog
-                visible={showDeleteConfirm}
-                onClose={() => setShowDeleteConfirm(false)}
-                title="确认删除"
-                content={`确定要删除选中的 ${selectedRecords.size} 条记录吗？此操作不可恢复。`}
-                confirmBtn="删除"
-                cancelBtn="取消"
-                onConfirm={handleDeleteConfirm}
-            />
-        </>
+                            <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={handleDeleteSelected}
+                                disabled={selectedRecords.size === 0}
+                            >
+                                删除选中 ({selectedRecords.size})
+                            </Button>
+
+                            <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={handleDeleteAll}
+                            >
+                                删除全部 ({records.length})
+                            </Button>
+                        </div>
+
+                        {/* 记录列表 */}
+                        <div className="space-y-3">
+                            {records.map((record) => (
+                                <div
+                                    key={record.id}
+                                    className={`history-item ${selectedRecords.has(record.id) ? 'selected' : ''}`}
+                                    onClick={() => toggleRecordSelection(record.id)}
+                                >
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1">
+                                            <div className="text-sm text-muted-foreground mb-1">
+                                                {formatDate(record.timestamp)}
+                                            </div>
+                                            {record.content && (
+                                                <div className="text-sm">{record.content}</div>
+                                            )}
+                                            <div className="text-xs text-muted-foreground mt-1">
+                                                得分: {record.score}分
+                                            </div>
+                                        </div>
+                                        <div className="ml-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedRecords.has(record.id)}
+                                                onChange={() => toggleRecordSelection(record.id)}
+                                                className="w-4 h-4"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )}
+            </CardContent>
+        </Card>
     );
 }; 

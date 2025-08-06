@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Textarea } from 'tdesign-mobile-react';
+import { Button } from '../ui/button';
+import { Textarea } from '../ui/textarea';
 import type { PracticeRecord } from '../../types';
 import { storageService } from '../../services/storage';
 
@@ -44,26 +45,22 @@ export const TextInputPractice: React.FC<TextInputPracticeProps> = ({
     return (
         <div className="record-center w-full">
             {/* 描述 */}
-            <div className="text-gray-600 mb-6 text-center w-full">{content}</div>
+            <div className="text-muted-foreground mb-6 text-center w-full">{content}</div>
 
             {/* 输入区域 */}
             <div className="space-y-4 mb-6 w-full">
                 <Textarea
                     placeholder="在这里记录你的想法..."
                     value={input}
-                    onChange={(value) => setInput(String(value))}
-                    maxlength={500}
-                    autosize={{ minRows: 4, maxRows: 8 }}
-                    className="mb-4 w-full"
-                    style={{ width: '100%', minWidth: '100%' }}
+                    onChange={(e) => setInput(e.target.value)}
+                    maxLength={500}
+                    className="mb-4 w-full min-h-[120px]"
                 />
                 <div className="button-center w-full">
                     <Button
-                        theme="primary"
-                        size="large"
-                        disabled={!input.trim()}
                         onClick={handleSubmit}
-                        style={{ minWidth: '200px', width: 'auto' }}
+                        disabled={!input.trim()}
+                        className="min-w-[200px]"
                     >
                         记录并+1分
                     </Button>

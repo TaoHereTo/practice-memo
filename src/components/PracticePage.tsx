@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from 'tdesign-mobile-react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { PhoneAwayPractice } from './practices/PhoneAwayPractice';
 import { TextInputPractice } from './practices/TextInputPractice';
 import { MeditationPractice } from './practices/MeditationPractice';
@@ -52,48 +53,38 @@ export const PracticePage: React.FC = () => {
     return (
         <div className="mobile-container content-area main-content pb-20 md:pb-6">
             {/* 顶部标题区 */}
-            <div className="card">
-                <div className="main-title">练习备忘录</div>
-                <div className="text-center text-gray-600 leading-relaxed">
-                    专注于漫长的、普通的日常，沉下心做好眼前最具体的事，然后，静待水到渠成。
-                </div>
-            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="main-title">练习备忘录</CardTitle>
+                    <p className="text-center text-muted-foreground leading-relaxed">
+                        专注于漫长的、普通的日常，沉下心做好眼前最具体的事，然后，静待水到渠成。
+                    </p>
+                </CardHeader>
+            </Card>
 
             {/* 练习内容卡片 */}
-            <div className="card">
-                {/* 练习切换按钮 */}
-                <div className="glassmorphism-tabbar mb-6">
-                    <div className="flex overflow-x-auto no-scrollbar">
-                        {practiceData.map((practice) => (
-                            <Button
-                                key={practice.id}
-                                theme={activeTab === practice.id ? "primary" : "default"}
-                                size="small"
-                                onClick={() => setActiveTab(practice.id)}
-                                style={{
-                                    flex: '1 0 auto',
-                                    fontSize: '12px',
-                                    padding: '8px 4px',
-                                    borderRadius: '8px',
-                                    margin: '0 2px',
-                                    whiteSpace: 'nowrap',
-                                    minWidth: '0'
-                                }}
-                            >
-                                {practice.tabTitle}
-                            </Button>
-                        ))}
-                    </div>
-                </div>
-                {/* 练习内容 */}
-                {renderPracticeContent()}
-            </div>
+            <Card>
+                <CardContent className="p-6">
+                    {/* 练习切换 */}
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                        <TabsList className="grid w-full grid-cols-5 mb-6">
+                            {practiceData.map((practice) => (
+                                <TabsTrigger key={practice.id} value={practice.id} className="text-xs">
+                                    {practice.tabTitle}
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+
+                        {/* 练习内容 */}
+                        {renderPracticeContent()}
+                    </Tabs>
+                </CardContent>
+            </Card>
 
             {/* 历史记录卡片 - 独立渲染 */}
             {['practice_2', 'practice_3', 'practice_4'].includes(activeTab) && (
                 <HistoryRecords
                     practiceId={activeTab}
-                    onRecordAdded={handleRecordAdded}
                 />
             )}
         </div>
