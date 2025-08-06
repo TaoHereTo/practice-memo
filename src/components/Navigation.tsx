@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface NavigationProps {
-    currentPage: 'practice' | 'statistics';
-    onPageChange: (page: 'practice' | 'statistics') => void;
+    currentPage: 'practice' | 'statistics' | 'mood';
+    onPageChange: (page: 'practice' | 'statistics' | 'mood') => void;
 }
 
 // 练习图标组件
@@ -42,6 +42,26 @@ const StatisticsIcon: React.FC<{ isSidebar?: boolean }> = ({ isSidebar = false }
     </svg>
 );
 
+// 心情图标组件
+const MoodIcon: React.FC<{ isSidebar?: boolean }> = ({ isSidebar = false }) => (
+    <svg
+        width={isSidebar ? "24" : "28"}
+        height={isSidebar ? "24" : "28"}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{ display: 'block', margin: '0 auto' }}
+    >
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+        <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+        <line x1="9" y1="9" x2="9.01" y2="9" />
+        <line x1="15" y1="9" x2="15.01" y2="9" />
+    </svg>
+);
+
 export const Navigation: React.FC<NavigationProps> = ({
     currentPage,
     onPageChange
@@ -61,6 +81,16 @@ export const Navigation: React.FC<NavigationProps> = ({
                         >
                             <PracticeIcon />
                             <span className="text-xs mt-1 font-medium">练习</span>
+                        </button>
+                        <button
+                            className={`flex-1 flex flex-col items-center justify-center py-4 rounded-[32px] transition-all duration-200 ${currentPage === 'mood'
+                                ? 'bg-foreground text-white shadow-lg'
+                                : 'text-black hover:text-black hover:bg-accent'
+                                }`}
+                            onClick={() => onPageChange('mood')}
+                        >
+                            <MoodIcon />
+                            <span className="text-xs mt-1 font-medium">情绪</span>
                         </button>
                         <button
                             className={`flex-1 flex flex-col items-center justify-center py-4 rounded-[32px] transition-all duration-200 ${currentPage === 'statistics'
@@ -91,6 +121,18 @@ export const Navigation: React.FC<NavigationProps> = ({
                             <div className="flex items-center">
                                 <PracticeIcon isSidebar={true} />
                                 <span className="ml-3 font-medium">练习</span>
+                            </div>
+                        </button>
+                        <button
+                            className={`w-full text-left px-4 py-3 rounded-2xl transition-all duration-200 ${currentPage === 'mood'
+                                ? 'bg-primary text-primary-foreground shadow-lg'
+                                : 'text-muted hover:text-foreground hover:bg-accent'
+                                }`}
+                            onClick={() => onPageChange('mood')}
+                        >
+                            <div className="flex items-center">
+                                <MoodIcon isSidebar={true} />
+                                <span className="ml-3 font-medium">情绪记录</span>
                             </div>
                         </button>
                         <button

@@ -1,0 +1,65 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}/src",
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${webRoot}/*"
+            },
+            "userDataDir": "${workspaceFolder}/.vscode/temp-chrome-debug",
+            "runtimeArgs": [
+                "--disable-web-security",
+                "--disable-features=VizDisplayCompositor",
+                "--disable-background-timer-throttling",
+                "--disable-renderer-backgrounding",
+                "--disable-backgrounding-occluded-windows",
+                "--disable-ipc-flooding-protection"
+            ],
+            "preLaunchTask": "Start Dev Server"
+        },
+        {
+            "name": "Launch Edge",
+            "type": "msedge",
+            "request": "launch",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}/src",
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${webRoot}/*"
+            },
+            "userDataDir": "${workspaceFolder}/.vscode/temp-edge-debug",
+            "runtimeArgs": [
+                "--disable-web-security",
+                "--disable-features=VizDisplayCompositor",
+                "--disable-background-timer-throttling",
+                "--disable-renderer-backgrounding",
+                "--disable-backgrounding-occluded-windows",
+                "--disable-ipc-flooding-protection"
+            ],
+            "preLaunchTask": "Start Dev Server"
+        },
+        {
+            "name": "Attach to Chrome",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}/src",
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${webRoot}/*"
+            }
+        },
+        {
+            "name": "Attach to Edge",
+            "type": "msedge",
+            "request": "attach",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}/src",
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${webRoot}/*"
+            }
+        }
+    ]
+}

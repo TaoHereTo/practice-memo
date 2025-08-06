@@ -192,7 +192,7 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                                         <Button
                                             variant="outline"
                                             onClick={() => setShowDurationSelect(false)}
-                                            className="flex-1 custom-button secondary"
+                                            className="flex-1 custom-button pause"
                                         >
                                             取消
                                         </Button>
@@ -225,7 +225,7 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                             variant="outline"
                             onClick={handlePause}
                             size="lg"
-                            className="custom-button secondary"
+                            className="custom-button pause"
                         >
                             暂停
                         </Button>

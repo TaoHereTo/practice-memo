@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from './ui/carousel';
 import { PhoneAwayPractice } from './practices/PhoneAwayPractice';
 import { TextInputPractice } from './practices/TextInputPractice';
 import { MeditationPractice } from './practices/MeditationPractice';
@@ -10,6 +10,37 @@ import type { PracticeRecord } from '../types';
 
 export const PracticePage: React.FC = () => {
     const [activeTab, setActiveTab] = useState('practice_1');
+    const [api, setApi] = useState<CarouselApi>();
+
+    // 页面索引映射
+    const practiceIndexMap = practiceData.reduce((map, practice, index) => {
+        map[practice.id] = index;
+        return map;
+    }, {} as Record<string, number>);
+
+    const indexPracticeMap = practiceData.map(practice => practice.id);
+
+    // 当 activeTab 改变时，滚动到对应的轮播项
+    useEffect(() => {
+        if (api) {
+            api.scrollTo(practiceIndexMap[activeTab]);
+        }
+    }, [activeTab, api]);
+
+    // 当轮播项改变时，更新当前页面状态
+    useEffect(() => {
+        if (!api) return;
+
+        const onSelect = () => {
+            const selectedIndex = api.selectedScrollSnap();
+            setActiveTab(indexPracticeMap[selectedIndex]);
+        };
+
+        api.on('select', onSelect);
+        return () => {
+            api.off('select', onSelect);
+        };
+    }, [api]);
 
     // 监听新记录添加
     const handleRecordAdded = (record: PracticeRecord) => {
@@ -17,38 +48,7 @@ export const PracticePage: React.FC = () => {
         console.log('新记录已添加:', record);
     };
 
-    const renderPracticeContent = () => {
-        const practice = practiceData.find(p => p.id === activeTab);
-        if (!practice) return null;
 
-        if (practice.id === 'practice_1') {
-            return (
-                <PhoneAwayPractice
-                    practiceId={practice.id}
-                    title={practice.title}
-                    content={practice.content}
-                />
-            );
-        } else if (['practice_2', 'practice_3', 'practice_4'].includes(practice.id)) {
-            return (
-                <TextInputPractice
-                    practiceId={practice.id}
-                    title={practice.title}
-                    content={practice.content}
-                    onRecordAdded={handleRecordAdded}
-                />
-            );
-        } else if (practice.id === 'practice_5') {
-            return (
-                <MeditationPractice
-                    practiceId={practice.id}
-                    title={practice.title}
-                    content={practice.content}
-                />
-            );
-        }
-        return null;
-    };
 
     return (
         <div className="mobile-container content-area main-content mx-auto" style={{ width: '95%' }}>
@@ -65,31 +65,68 @@ export const PracticePage: React.FC = () => {
             {/* 练习内容卡片 */}
             <Card className="glassmorphism mb-6">
                 <CardContent className="p-6">
-                    {/* 练习切换 */}
-                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                        <TabsList className="grid w-full grid-cols-5 mb-6 custom-tabs">
-                            {practiceData.map((practice) => (
-                                <TabsTrigger
-                                    key={practice.id}
-                                    value={practice.id}
-                                    className="text-xs font-medium"
-                                >
-                                    {practice.tabTitle}
-                                </TabsTrigger>
-                            ))}
-                        </TabsList>
+                    {/* 练习切换指示器 */}
+                    <div className="flex justify-center space-x-1 mb-6 overflow-x-auto">
+                        {practiceData.map((practice) => (
+                            <button
+                                key={practice.id}
+                                onClick={() => setActiveTab(practice.id)}
+                                className={`px-2 py-1 text-xs font-medium rounded-full transition-all duration-200 whitespace-nowrap flex-shrink-0 ${activeTab === practice.id
+                                    ? 'bg-primary text-primary-foreground shadow-lg'
+                                    : 'text-muted hover:text-foreground'
+                                    }`}
+                                style={activeTab !== practice.id ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                            >
+                                {practice.tabTitle}
+                            </button>
+                        ))}
+                    </div>
 
-                        {/* 练习内容 */}
-                        <div className="fade-in">
-                            {renderPracticeContent()}
-                        </div>
-                    </Tabs>
+                    {/* 练习内容轮播 */}
+                    <Carousel
+                        setApi={setApi}
+                        opts={{
+                            align: "start",
+                            dragFree: false,
+                            containScroll: "trimSnaps"
+                        }}
+                        className="w-full"
+                    >
+                        <CarouselContent className="-ml-0">
+                            {practiceData.map((practice) => (
+                                <CarouselItem key={practice.id} className="pl-0">
+                                    <div>
+                                        {practice.id === 'practice_1' ? (
+                                            <PhoneAwayPractice
+                                                practiceId={practice.id}
+                                                title={practice.title}
+                                                content={practice.content}
+                                            />
+                                        ) : ['practice_2', 'practice_3', 'practice_4'].includes(practice.id) ? (
+                                            <TextInputPractice
+                                                practiceId={practice.id}
+                                                title={practice.title}
+                                                content={practice.content}
+                                                onRecordAdded={handleRecordAdded}
+                                            />
+                                        ) : practice.id === 'practice_5' ? (
+                                            <MeditationPractice
+                                                practiceId={practice.id}
+                                                title={practice.title}
+                                                content={practice.content}
+                                            />
+                                        ) : null}
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                    </Carousel>
                 </CardContent>
             </Card>
 
             {/* 历史记录卡片 - 独立渲染 */}
             {['practice_2', 'practice_3', 'practice_4'].includes(activeTab) && (
-                <div className="fade-in">
+                <div>
                     <HistoryRecords
                         practiceId={activeTab}
                     />

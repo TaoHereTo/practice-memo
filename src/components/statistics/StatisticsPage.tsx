@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
-import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '../ui/carousel';
 import type { TimeRange, PracticeRecord } from '../../types';
 import { storageService } from '../../services/storage';
 import { practiceData } from '../../data/practiceData';
@@ -14,6 +14,64 @@ export const StatisticsPage: React.FC = () => {
     const [totalScore, setTotalScore] = useState(0);
     const [activeChart, setActiveChart] = useState('radar');
     const [showClearConfirm, setShowClearConfirm] = useState(false);
+
+    // Carousel APIs
+    const [timeRangeApi, setTimeRangeApi] = useState<CarouselApi>();
+    const [chartApi, setChartApi] = useState<CarouselApi>();
+
+    // 时间范围映射
+    const timeRangeIndexMap = {
+        'today': 0,
+        'week': 1,
+        'month': 2
+    };
+    const indexTimeRangeMap = ['today', 'week', 'month'] as const;
+
+    // 图表类型映射
+    const chartIndexMap = {
+        'radar': 0,
+        'pie': 1,
+        'trend': 2
+    };
+    const indexChartMap = ['radar', 'pie', 'trend'] as const;
+
+    // 时间范围 carousel 同步
+    useEffect(() => {
+        if (timeRangeApi) {
+            timeRangeApi.scrollTo(timeRangeIndexMap[timeRange]);
+        }
+    }, [timeRange, timeRangeApi]);
+
+    useEffect(() => {
+        if (!timeRangeApi) return;
+        const onSelect = () => {
+            const selectedIndex = timeRangeApi.selectedScrollSnap();
+            setTimeRange(indexTimeRangeMap[selectedIndex]);
+        };
+        timeRangeApi.on('select', onSelect);
+        return () => {
+            timeRangeApi.off('select', onSelect);
+        };
+    }, [timeRangeApi]);
+
+    // 图表类型 carousel 同步
+    useEffect(() => {
+        if (chartApi) {
+            chartApi.scrollTo(chartIndexMap[activeChart as keyof typeof chartIndexMap]);
+        }
+    }, [activeChart, chartApi]);
+
+    useEffect(() => {
+        if (!chartApi) return;
+        const onSelect = () => {
+            const selectedIndex = chartApi.selectedScrollSnap();
+            setActiveChart(indexChartMap[selectedIndex]);
+        };
+        chartApi.on('select', onSelect);
+        return () => {
+            chartApi.off('select', onSelect);
+        };
+    }, [chartApi]);
 
     // 获取时间范围
     const getTimeRange = (range: TimeRange) => {
@@ -127,13 +185,58 @@ export const StatisticsPage: React.FC = () => {
                     <CardTitle className="text-foreground">时间范围</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as TimeRange)} className="w-full">
-                        <TabsList className="grid w-full grid-cols-3 custom-tabs">
-                            <TabsTrigger value="today">今日</TabsTrigger>
-                            <TabsTrigger value="week">本周</TabsTrigger>
-                            <TabsTrigger value="month">本月</TabsTrigger>
-                        </TabsList>
-                    </Tabs>
+                    {/* 时间范围切换指示器 */}
+                    <div className="flex justify-center space-x-2 mb-4">
+                        <button
+                            onClick={() => setTimeRange('today')}
+                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${timeRange === 'today'
+                                ? 'bg-primary text-primary-foreground shadow-lg'
+                                : 'text-muted hover:text-foreground'
+                                }`}
+                            style={timeRange !== 'today' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                        >
+                            今日
+                        </button>
+                        <button
+                            onClick={() => setTimeRange('week')}
+                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${timeRange === 'week'
+                                ? 'bg-primary text-primary-foreground shadow-lg'
+                                : 'text-muted hover:text-foreground'
+                                }`}
+                            style={timeRange !== 'week' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                        >
+                            本周
+                        </button>
+                        <button
+                            onClick={() => setTimeRange('month')}
+                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${timeRange === 'month'
+                                ? 'bg-primary text-primary-foreground shadow-lg'
+                                : 'text-muted hover:text-foreground'
+                                }`}
+                            style={timeRange !== 'month' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                        >
+                            本月
+                        </button>
+                    </div>
+
+                    {/* 隐藏的轮播组件用于手势支持 */}
+                    <div className="opacity-0 h-0 overflow-hidden">
+                        <Carousel
+                            setApi={setTimeRangeApi}
+                            opts={{
+                                align: "start",
+                                dragFree: false,
+                                containScroll: "trimSnaps"
+                            }}
+                            className="w-full"
+                        >
+                            <CarouselContent className="-ml-0">
+                                <CarouselItem className="pl-0"><div>今日</div></CarouselItem>
+                                <CarouselItem className="pl-0"><div>本周</div></CarouselItem>
+                                <CarouselItem className="pl-0"><div>本月</div></CarouselItem>
+                            </CarouselContent>
+                        </Carousel>
+                    </div>
                 </CardContent>
             </Card>
 
@@ -156,13 +259,58 @@ export const StatisticsPage: React.FC = () => {
                     <CardTitle className="text-foreground">数据图表</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Tabs value={activeChart} onValueChange={setActiveChart} className="w-full">
-                        <TabsList className="grid w-full grid-cols-3 custom-tabs">
-                            <TabsTrigger value="radar">练习分布</TabsTrigger>
-                            <TabsTrigger value="pie">饼状图</TabsTrigger>
-                            <TabsTrigger value="trend">得分趋势</TabsTrigger>
-                        </TabsList>
-                    </Tabs>
+                    {/* 图表类型切换指示器 */}
+                    <div className="flex justify-center space-x-2 mb-4">
+                        <button
+                            onClick={() => setActiveChart('radar')}
+                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${activeChart === 'radar'
+                                ? 'bg-primary text-primary-foreground shadow-lg'
+                                : 'text-muted hover:text-foreground'
+                                }`}
+                            style={activeChart !== 'radar' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                        >
+                            练习分布
+                        </button>
+                        <button
+                            onClick={() => setActiveChart('pie')}
+                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${activeChart === 'pie'
+                                ? 'bg-primary text-primary-foreground shadow-lg'
+                                : 'text-muted hover:text-foreground'
+                                }`}
+                            style={activeChart !== 'pie' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                        >
+                            饼状图
+                        </button>
+                        <button
+                            onClick={() => setActiveChart('trend')}
+                            className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${activeChart === 'trend'
+                                ? 'bg-primary text-primary-foreground shadow-lg'
+                                : 'text-muted hover:text-foreground'
+                                }`}
+                            style={activeChart !== 'trend' ? { backgroundColor: 'rgb(231, 240, 255)' } : {}}
+                        >
+                            得分趋势
+                        </button>
+                    </div>
+
+                    {/* 隐藏的轮播组件用于手势支持 */}
+                    <div className="opacity-0 h-0 overflow-hidden">
+                        <Carousel
+                            setApi={setChartApi}
+                            opts={{
+                                align: "start",
+                                dragFree: false,
+                                containScroll: "trimSnaps"
+                            }}
+                            className="w-full"
+                        >
+                            <CarouselContent className="-ml-0">
+                                <CarouselItem className="pl-0"><div>练习分布</div></CarouselItem>
+                                <CarouselItem className="pl-0"><div>饼状图</div></CarouselItem>
+                                <CarouselItem className="pl-0"><div>得分趋势</div></CarouselItem>
+                            </CarouselContent>
+                        </Carousel>
+                    </div>
                 </CardContent>
             </Card>
 
@@ -173,15 +321,23 @@ export const StatisticsPage: React.FC = () => {
                         {activeChart === 'radar' && (
                             <ResponsiveContainer width="100%" height="100%">
                                 <RadarChart data={radarData}>
-                                    <PolarGrid stroke="#E5E7EB" />
-                                    <PolarAngleAxis dataKey="practice" tick={{ fill: '#000000' }} />
-                                    <PolarRadiusAxis tick={{ fill: '#000000' }} />
+                                    <PolarGrid stroke="#E5E7EB" strokeDasharray="3 3" />
+                                    <PolarAngleAxis
+                                        dataKey="practice"
+                                        tick={{ fill: '#000000', fontSize: 12, fontWeight: 500 }}
+                                    />
+                                    <PolarRadiusAxis
+                                        tick={{ fill: '#000000', fontSize: 10 }}
+                                        axisLine={false}
+                                    />
                                     <Radar
                                         name="得分"
                                         dataKey="score"
                                         stroke="rgb(225, 252, 74)"
+                                        strokeWidth={3}
                                         fill="rgb(225, 252, 74)"
-                                        fillOpacity={0.3}
+                                        fillOpacity={0.2}
+                                        dot={{ fill: 'rgb(225, 252, 74)', strokeWidth: 2, r: 4 }}
                                     />
                                 </RadarChart>
                             </ResponsiveContainer>
@@ -195,13 +351,22 @@ export const StatisticsPage: React.FC = () => {
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
-                                        label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
-                                        outerRadius={80}
+                                        label={({ name, percent, value }) =>
+                                            (value || 0) > 0 ? `${name}\n${value || 0}分 (${((percent || 0) * 100).toFixed(0)}%)` : ''
+                                        }
+                                        outerRadius={100}
+                                        innerRadius={40}
                                         fill="#8884d8"
                                         dataKey="value"
+                                        paddingAngle={2}
                                     >
                                         {pieData.map((entry, index) => (
-                                            <RechartsCell key={`cell-${index}`} fill={entry.color} />
+                                            <RechartsCell
+                                                key={`cell-${index}`}
+                                                fill={entry.color}
+                                                stroke="#FFFFFF"
+                                                strokeWidth={2}
+                                            />
                                         ))}
                                     </Pie>
                                     <Tooltip
@@ -209,8 +374,10 @@ export const StatisticsPage: React.FC = () => {
                                             backgroundColor: '#FFFFFF',
                                             border: '1px solid #E5E7EB',
                                             borderRadius: '12px',
-                                            color: '#000000'
+                                            color: '#000000',
+                                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
                                         }}
+                                        formatter={(value, name) => [`${value}分`, name]}
                                     />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -219,28 +386,42 @@ export const StatisticsPage: React.FC = () => {
                         {activeChart === 'trend' && (
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={trendData}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                                    <XAxis dataKey="date" tick={{ fill: '#000000' }} />
-                                    <YAxis tick={{ fill: '#000000' }} />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" opacity={0.5} />
+                                    <XAxis
+                                        dataKey="date"
+                                        tick={{ fill: '#000000', fontSize: 12 }}
+                                        axisLine={false}
+                                        tickLine={false}
+                                    />
+                                    <YAxis
+                                        tick={{ fill: '#000000', fontSize: 12 }}
+                                        axisLine={false}
+                                        tickLine={false}
+                                    />
                                     <Tooltip
                                         contentStyle={{
                                             backgroundColor: '#FFFFFF',
                                             border: '1px solid #E5E7EB',
                                             borderRadius: '12px',
-                                            color: '#000000'
+                                            color: '#000000',
+                                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
                                         }}
+                                        formatter={(value) => [`${value}分`, '得分']}
+                                        labelFormatter={(label) => `日期: ${label}`}
                                     />
                                     <Line
                                         type="monotone"
                                         dataKey="score"
                                         stroke="#5BFFC2"
-                                        strokeWidth={3}
+                                        strokeWidth={4}
+                                        dot={{ fill: '#5BFFC2', strokeWidth: 2, r: 6 }}
+                                        activeDot={{ r: 8, stroke: '#5BFFC2', strokeWidth: 2 }}
                                         fill="url(#gradient)"
                                     />
                                     <defs>
                                         <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#5BFFC2" stopOpacity={0.3} />
-                                            <stop offset="95%" stopColor="#5BFFC2" stopOpacity={0} />
+                                            <stop offset="5%" stopColor="#5BFFC2" stopOpacity={0.4} />
+                                            <stop offset="95%" stopColor="#5BFFC2" stopOpacity={0.1} />
                                         </linearGradient>
                                     </defs>
                                 </LineChart>

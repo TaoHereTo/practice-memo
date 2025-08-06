@@ -53,30 +53,7 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
         }
     };
 
-    // 删除所有记录
-    const handleDeleteAll = () => {
-        if (records.length === 0) {
-            alert('没有记录可删除');
-            return;
-        }
 
-        if (confirm(`确定要删除所有 ${records.length} 条记录吗？`)) {
-            records.forEach(record => {
-                storageService.deleteRecord(record.id);
-            });
-            setSelectedRecords(new Set());
-            setRecords([]);
-        }
-    };
-
-    // 全选/取消全选
-    const handleSelectAll = () => {
-        if (selectedRecords.size === records.length) {
-            setSelectedRecords(new Set());
-        } else {
-            setSelectedRecords(new Set(records.map(record => record.id)));
-        }
-    };
 
     // 切换记录选择状态
     const toggleRecordSelection = (recordId: string) => {
@@ -115,17 +92,8 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
                     </div>
                 ) : (
                     <>
-                        {/* 操作按钮 - 一直显示 */}
+                        {/* 操作按钮 - 只保留删除选中 */}
                         <div className="history-actions mb-6 flex gap-3 flex-wrap">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleSelectAll}
-                                className="custom-button secondary"
-                            >
-                                {selectedRecords.size === records.length ? '取消全选' : '全选'}
-                            </Button>
-
                             <Button
                                 variant="destructive"
                                 size="sm"
@@ -134,15 +102,6 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
                                 className="delete-button"
                             >
                                 删除选中 ({selectedRecords.size})
-                            </Button>
-
-                            <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={handleDeleteAll}
-                                className="delete-button"
-                            >
-                                删除全部 ({records.length})
                             </Button>
                         </div>
 

@@ -89,8 +89,8 @@ export const PhoneAwayPractice: React.FC<PhoneAwayPracticeProps> = ({
 
     const handleComplete = () => {
         if (state.totalTime > 0) {
-            // 计算得分：每分钟1分
-            const score = Math.floor(state.totalTime / 60);
+            // 计算得分：每25分钟1分
+            const score = Math.floor(state.totalTime / (25 * 60));
 
             const record: PracticeRecord = {
                 id: Date.now().toString(),
@@ -145,7 +145,7 @@ export const PhoneAwayPractice: React.FC<PhoneAwayPracticeProps> = ({
                         variant="outline"
                         onClick={handlePause}
                         size="lg"
-                        className="custom-button secondary"
+                        className="custom-button pause"
                     >
                         暂停
                     </Button>
