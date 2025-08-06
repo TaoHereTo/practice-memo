@@ -119,14 +119,14 @@ export const PhoneAwayPractice: React.FC<PhoneAwayPracticeProps> = ({
     return (
         <div className="record-center">
             {/* 描述 */}
-            <div className="text-muted-foreground mb-6 text-center">{content}</div>
+            <div className="text-muted mb-6 text-center text-lg leading-relaxed">{content}</div>
 
             {/* 计时器显示 */}
-            <div className="text-4xl font-mono font-bold text-blue-500 mb-2 number">
+            <div className="text-6xl font-mono font-bold text-foreground mb-3">
                 {displayTime}
             </div>
-            <div className="text-sm text-muted-foreground mb-6">
-                今日累计得分: <span className="number">{todayScore}</span>分
+            <div className="text-sm text-muted mb-6">
+                今日累计得分: <span className="text-tertiary font-medium">{todayScore}</span>分
             </div>
 
             {/* 控制按钮 */}
@@ -135,6 +135,8 @@ export const PhoneAwayPractice: React.FC<PhoneAwayPracticeProps> = ({
                     <Button
                         onClick={handleStart}
                         size="lg"
+                        className="custom-button"
+                        variant="default"
                     >
                         {state.totalTime > 0 ? '继续远离' : '开始远离'}
                     </Button>
@@ -143,6 +145,7 @@ export const PhoneAwayPractice: React.FC<PhoneAwayPracticeProps> = ({
                         variant="outline"
                         onClick={handlePause}
                         size="lg"
+                        className="custom-button secondary"
                     >
                         暂停
                     </Button>
@@ -152,6 +155,8 @@ export const PhoneAwayPractice: React.FC<PhoneAwayPracticeProps> = ({
                     <Button
                         onClick={handleComplete}
                         size="lg"
+                        className="success-button"
+                        variant="tertiary"
                     >
                         完成并记录
                     </Button>

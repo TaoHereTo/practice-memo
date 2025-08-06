@@ -45,22 +45,23 @@ export const TextInputPractice: React.FC<TextInputPracticeProps> = ({
     return (
         <div className="record-center w-full">
             {/* 描述 */}
-            <div className="text-muted-foreground mb-6 text-center w-full">{content}</div>
+            <div className="text-muted mb-6 text-center w-full text-lg leading-relaxed">{content}</div>
 
             {/* 输入区域 */}
-            <div className="space-y-4 mb-6 w-full">
+            <div className="space-y-6 mb-6 w-full">
                 <Textarea
                     placeholder="在这里记录你的想法..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     maxLength={500}
-                    className="mb-4 w-full min-h-[120px]"
+                    className="mb-4 w-full min-h-[120px] custom-textarea"
                 />
                 <div className="button-center w-full">
                     <Button
                         onClick={handleSubmit}
                         disabled={!input.trim()}
-                        className="min-w-[200px]"
+                        className="min-w-[200px] success-button"
+                        variant="tertiary"
                     >
                         记录并+1分
                     </Button>

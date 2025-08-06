@@ -8,13 +8,13 @@ function App() {
   const [currentPage, setCurrentPage] = useState<'practice' | 'statistics'>('practice');
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#F3F4F6' }}>
       <Navigation
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       />
 
-      <main className="min-h-screen pt-4">
+      <main className="min-h-screen fade-in" style={{ backgroundColor: '#F3F4F6', paddingBottom: '120px' }}>
         {currentPage === 'practice' && <PracticePage />}
         {currentPage === 'statistics' && <StatisticsPage />}
       </main>

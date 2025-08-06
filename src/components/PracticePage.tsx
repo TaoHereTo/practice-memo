@@ -51,41 +51,49 @@ export const PracticePage: React.FC = () => {
     };
 
     return (
-        <div className="mobile-container content-area main-content pb-20 md:pb-6">
+        <div className="mobile-container content-area main-content mx-auto" style={{ width: '95%' }}>
             {/* 顶部标题区 */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="main-title">练习备忘录</CardTitle>
-                    <p className="text-center text-muted-foreground leading-relaxed">
+            <Card className="glassmorphism mb-6">
+                <CardHeader className="text-center">
+                    <CardTitle className="main-title text-foreground">练习备忘录</CardTitle>
+                    <p className="text-muted leading-relaxed text-lg">
                         专注于漫长的、普通的日常，沉下心做好眼前最具体的事，然后，静待水到渠成。
                     </p>
                 </CardHeader>
             </Card>
 
             {/* 练习内容卡片 */}
-            <Card>
+            <Card className="glassmorphism mb-6">
                 <CardContent className="p-6">
                     {/* 练习切换 */}
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                        <TabsList className="grid w-full grid-cols-5 mb-6">
+                        <TabsList className="grid w-full grid-cols-5 mb-6 custom-tabs">
                             {practiceData.map((practice) => (
-                                <TabsTrigger key={practice.id} value={practice.id} className="text-xs">
+                                <TabsTrigger
+                                    key={practice.id}
+                                    value={practice.id}
+                                    className="text-xs font-medium"
+                                >
                                     {practice.tabTitle}
                                 </TabsTrigger>
                             ))}
                         </TabsList>
 
                         {/* 练习内容 */}
-                        {renderPracticeContent()}
+                        <div className="fade-in">
+                            {renderPracticeContent()}
+                        </div>
                     </Tabs>
                 </CardContent>
             </Card>
 
             {/* 历史记录卡片 - 独立渲染 */}
             {['practice_2', 'practice_3', 'practice_4'].includes(activeTab) && (
-                <HistoryRecords
-                    practiceId={activeTab}
-                />
+                <div className="fade-in">
+                    <HistoryRecords
+                        practiceId={activeTab}
+                    />
+                </div>
             )}
         </div>
     );

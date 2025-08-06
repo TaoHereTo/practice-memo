@@ -147,16 +147,16 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
     return (
         <div className="record-center">
             {/* 描述 */}
-            <div className="text-muted-foreground mb-6 text-center">{content}</div>
+            <div className="text-muted mb-6 text-center text-lg leading-relaxed">{content}</div>
 
             {/* 计时器显示 */}
             {state.duration > 0 && (
                 <div className="mb-6">
-                    <div className="text-4xl font-mono font-bold text-blue-500 mb-2 number">
+                    <div className="text-6xl font-mono font-bold text-foreground mb-3">
                         {formatTime(state.remainingTime)}
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                        总时长: <span className="number">{formatTime(state.duration)}</span>
+                    <div className="text-sm text-muted">
+                        总时长: <span className="text-tertiary font-medium">{formatTime(state.duration)}</span>
                     </div>
                 </div>
             )}
@@ -167,13 +167,13 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                     <>
                         <Dialog open={showDurationSelect} onOpenChange={setShowDurationSelect}>
                             <DialogTrigger asChild>
-                                <Button size="lg">
+                                <Button size="lg" variant="default" className="custom-button">
                                     开始冥想
                                 </Button>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
-                                    <DialogTitle>选择心灵小憩时长</DialogTitle>
+                                    <DialogTitle className="text-foreground">选择心灵小憩时长</DialogTitle>
                                 </DialogHeader>
                                 <div className="space-y-4">
                                     <div>
@@ -185,19 +185,21 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                                             onChange={(e) => setSelectedDuration(e.target.value)}
                                             type="number"
                                             placeholder="请输入时长"
+                                            className="custom-input"
                                         />
                                     </div>
                                     <div className="flex gap-3">
                                         <Button
                                             variant="outline"
                                             onClick={() => setShowDurationSelect(false)}
-                                            className="flex-1"
+                                            className="flex-1 custom-button secondary"
                                         >
                                             取消
                                         </Button>
                                         <Button
                                             onClick={handleStartMeditation}
-                                            className="flex-1"
+                                            className="flex-1 custom-button"
+                                            variant="tertiary"
                                         >
                                             开始
                                         </Button>
@@ -210,6 +212,7 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                             disabled={showSuccess}
                             className="success-button"
                             size="lg"
+                            variant="tertiary"
                         >
                             {showSuccess ? '✓ 保存成功' : '我已完成其他心灵小憩，直接+1分'}
                         </Button>
@@ -222,6 +225,7 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                             variant="outline"
                             onClick={handlePause}
                             size="lg"
+                            className="custom-button secondary"
                         >
                             暂停
                         </Button>
@@ -229,6 +233,7 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                             variant="destructive"
                             onClick={handleGiveUp}
                             size="lg"
+                            className="delete-button"
                         >
                             放弃
                         </Button>
@@ -240,6 +245,8 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                         <Button
                             onClick={handleResume}
                             size="lg"
+                            className="custom-button"
+                            variant="tertiary"
                         >
                             继续冥想
                         </Button>
@@ -247,6 +254,7 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
                             variant="destructive"
                             onClick={handleGiveUp}
                             size="lg"
+                            className="delete-button"
                         >
                             放弃
                         </Button>

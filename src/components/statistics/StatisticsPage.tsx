@@ -74,10 +74,10 @@ export const StatisticsPage: React.FC = () => {
             return {
                 name: practice.tabTitle,
                 value: score,
-                color: practice.id === 'practice_1' ? '#8884d8' :
-                    practice.id === 'practice_2' ? '#82ca9d' :
-                        practice.id === 'practice_3' ? '#ffc658' :
-                            practice.id === 'practice_4' ? '#ff7300' : '#8dd1e1'
+                color: practice.id === 'practice_1' ? '#F5FF5B' :
+                    practice.id === 'practice_2' ? '#5B8EFF' :
+                        practice.id === 'practice_3' ? '#5BFFC2' :
+                            practice.id === 'practice_4' ? '#FF6B6B' : '#A78BFA'
             };
         }).filter(item => item.value > 0);
     };
@@ -120,15 +120,15 @@ export const StatisticsPage: React.FC = () => {
     const trendData = getTrendData();
 
     return (
-        <div className="p-4 md:p-6 max-w-4xl mx-auto pb-20 md:pb-6">
+        <div className="mx-auto content-area" style={{ background: '#F3F4F6', minHeight: '100vh', paddingTop: '20px', width: '95%', padding: '20px' }}>
             {/* 时间范围选择器 */}
-            <Card>
+            <Card className="glassmorphism mb-6">
                 <CardHeader>
-                    <CardTitle>时间范围</CardTitle>
+                    <CardTitle className="text-foreground">时间范围</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as TimeRange)} className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
+                        <TabsList className="grid w-full grid-cols-3 custom-tabs">
                             <TabsTrigger value="today">今日</TabsTrigger>
                             <TabsTrigger value="week">本周</TabsTrigger>
                             <TabsTrigger value="month">本月</TabsTrigger>
@@ -138,26 +138,26 @@ export const StatisticsPage: React.FC = () => {
             </Card>
 
             {/* 总分卡片 */}
-            <Card>
+            <Card className="glassmorphism mb-6">
                 <CardHeader>
-                    <CardTitle>总得分</CardTitle>
+                    <CardTitle className="text-foreground">总得分</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-center py-4">
-                        <div className="text-4xl font-bold text-blue-500">{totalScore}</div>
-                        <div className="text-sm text-muted-foreground">分</div>
+                    <div className="text-center py-6">
+                        <div className="text-6xl font-bold text-foreground mb-2">{totalScore}</div>
+                        <div className="text-lg text-muted">分</div>
                     </div>
                 </CardContent>
             </Card>
 
             {/* 图表切换 */}
-            <Card>
+            <Card className="glassmorphism mb-6">
                 <CardHeader>
-                    <CardTitle>数据图表</CardTitle>
+                    <CardTitle className="text-foreground">数据图表</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Tabs value={activeChart} onValueChange={setActiveChart} className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
+                        <TabsList className="grid w-full grid-cols-3 custom-tabs">
                             <TabsTrigger value="radar">练习分布</TabsTrigger>
                             <TabsTrigger value="pie">饼状图</TabsTrigger>
                             <TabsTrigger value="trend">得分趋势</TabsTrigger>
@@ -167,21 +167,21 @@ export const StatisticsPage: React.FC = () => {
             </Card>
 
             {/* 图表区域 */}
-            <Card>
+            <Card className="glassmorphism mb-6">
                 <CardContent className="p-6">
                     <div className="h-80">
                         {activeChart === 'radar' && (
                             <ResponsiveContainer width="100%" height="100%">
                                 <RadarChart data={radarData}>
-                                    <PolarGrid />
-                                    <PolarAngleAxis dataKey="practice" />
-                                    <PolarRadiusAxis />
+                                    <PolarGrid stroke="#E5E7EB" />
+                                    <PolarAngleAxis dataKey="practice" tick={{ fill: '#000000' }} />
+                                    <PolarRadiusAxis tick={{ fill: '#000000' }} />
                                     <Radar
                                         name="得分"
                                         dataKey="score"
-                                        stroke="#0052d9"
-                                        fill="#0052d9"
-                                        fillOpacity={0.6}
+                                        stroke="rgb(225, 252, 74)"
+                                        fill="rgb(225, 252, 74)"
+                                        fillOpacity={0.3}
                                     />
                                 </RadarChart>
                             </ResponsiveContainer>
@@ -204,7 +204,14 @@ export const StatisticsPage: React.FC = () => {
                                             <RechartsCell key={`cell-${index}`} fill={entry.color} />
                                         ))}
                                     </Pie>
-                                    <Tooltip />
+                                    <Tooltip
+                                        contentStyle={{
+                                            backgroundColor: '#FFFFFF',
+                                            border: '1px solid #E5E7EB',
+                                            borderRadius: '12px',
+                                            color: '#000000'
+                                        }}
+                                    />
                                 </PieChart>
                             </ResponsiveContainer>
                         )}
@@ -212,16 +219,30 @@ export const StatisticsPage: React.FC = () => {
                         {activeChart === 'trend' && (
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={trendData}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="date" />
-                                    <YAxis />
-                                    <Tooltip />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                                    <XAxis dataKey="date" tick={{ fill: '#000000' }} />
+                                    <YAxis tick={{ fill: '#000000' }} />
+                                    <Tooltip
+                                        contentStyle={{
+                                            backgroundColor: '#FFFFFF',
+                                            border: '1px solid #E5E7EB',
+                                            borderRadius: '12px',
+                                            color: '#000000'
+                                        }}
+                                    />
                                     <Line
                                         type="monotone"
                                         dataKey="score"
-                                        stroke="#0052d9"
-                                        strokeWidth={2}
+                                        stroke="#5BFFC2"
+                                        strokeWidth={3}
+                                        fill="url(#gradient)"
                                     />
+                                    <defs>
+                                        <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#5BFFC2" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#5BFFC2" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
                                 </LineChart>
                             </ResponsiveContainer>
                         )}
@@ -230,13 +251,14 @@ export const StatisticsPage: React.FC = () => {
             </Card>
 
             {/* 清空数据按钮 */}
-            <Card>
+            <Card className="glassmorphism">
                 <CardContent className="p-6">
                     <div className="button-center">
                         <Button
                             variant="destructive"
                             onClick={handleClearAllData}
                             size="lg"
+                            className="delete-button"
                         >
                             清空所有数据
                         </Button>
@@ -248,8 +270,8 @@ export const StatisticsPage: React.FC = () => {
             <Dialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>确认清空</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle className="text-foreground">确认清空</DialogTitle>
+                        <DialogDescription className="text-muted-foreground">
                             确定要清空所有练习记录吗？此操作不可恢复，所有数据将被永久删除。
                         </DialogDescription>
                     </DialogHeader>
@@ -257,12 +279,14 @@ export const StatisticsPage: React.FC = () => {
                         <Button
                             variant="outline"
                             onClick={() => setShowClearConfirm(false)}
+                            className="custom-button secondary"
                         >
                             取消
                         </Button>
                         <Button
                             variant="destructive"
                             onClick={handleClearConfirm}
+                            className="delete-button"
                         >
                             清空
                         </Button>

@@ -104,23 +104,24 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
     if (!practice) return null;
 
     return (
-        <Card>
+        <Card className="glassmorphism">
             <CardHeader>
-                <CardTitle>{practice.tabTitle} - 历史记录</CardTitle>
+                <CardTitle className="text-foreground">{practice.tabTitle} - 历史记录</CardTitle>
             </CardHeader>
             <CardContent>
                 {records.length === 0 ? (
-                    <div className="text-center text-muted-foreground py-8">
+                    <div className="text-center text-muted py-8 text-lg">
                         暂无记录
                     </div>
                 ) : (
                     <>
                         {/* 操作按钮 - 一直显示 */}
-                        <div className="history-actions mb-4 flex gap-2 flex-wrap">
+                        <div className="history-actions mb-6 flex gap-3 flex-wrap">
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={handleSelectAll}
+                                className="custom-button secondary"
                             >
                                 {selectedRecords.size === records.length ? '取消全选' : '全选'}
                             </Button>
@@ -130,6 +131,7 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
                                 size="sm"
                                 onClick={handleDeleteSelected}
                                 disabled={selectedRecords.size === 0}
+                                className="delete-button"
                             >
                                 删除选中 ({selectedRecords.size})
                             </Button>
@@ -138,13 +140,14 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
                                 variant="destructive"
                                 size="sm"
                                 onClick={handleDeleteAll}
+                                className="delete-button"
                             >
                                 删除全部 ({records.length})
                             </Button>
                         </div>
 
                         {/* 记录列表 */}
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             {records.map((record) => (
                                 <div
                                     key={record.id}
@@ -153,22 +156,22 @@ export const HistoryRecords: React.FC<HistoryRecordsProps> = ({
                                 >
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1">
-                                            <div className="text-sm text-muted-foreground mb-1">
+                                            <div className="text-sm text-muted mb-2">
                                                 {formatDate(record.timestamp)}
                                             </div>
                                             {record.content && (
-                                                <div className="text-sm">{record.content}</div>
+                                                <div className="text-sm leading-relaxed">{record.content}</div>
                                             )}
-                                            <div className="text-xs text-muted-foreground mt-1">
+                                            <div className="text-xs text-tertiary mt-2 font-medium">
                                                 得分: {record.score}分
                                             </div>
                                         </div>
-                                        <div className="ml-2">
+                                        <div className="ml-3">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedRecords.has(record.id)}
                                                 onChange={() => toggleRecordSelection(record.id)}
-                                                className="w-4 h-4"
+                                                className="w-5 h-5 accent-primary"
                                             />
                                         </div>
                                     </div>

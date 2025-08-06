@@ -1,90 +1,102 @@
 {
     "theme": {
-      "name": "Vibrant Dark Analytics",
-      "mode": "dark",
-      "palette": {
-        "background": "#111213",
-        "surface": "#1C1D1F",
-        "primary": "#F5FF5B",
-        "secondary": "#5B8EFF",
-        "tertiary": "#5BFFC2",
-        "textPrimary": "#FFFFFF",
-        "textSecondary": "#A0A0A0",
-        "textTertiary": "#6B6B6B",
-        "border": "#3A3B3D"
-      }
+        "name": "Clean & Vibrant Light",
+        "mode": "light",
+        "palette": {
+            "background": "#F3F4F6",
+            "surface": "#FFFFFF",
+            "primary": "rgb(225, 252, 74)",
+            "secondary": "#5B8EFF",
+            "tertiary": "#5BFFC2",
+            "textPrimary": "#000000",
+            "textSecondary": "#000000",
+            "textOnPrimary": "#000000",
+            "border": "#E5E7EB"
+        }
     },
     "typography": {
-      "fontFamily": "Inter, sans-serif",
-      "sizes": {
-        "h1": "32px",
-        "h2": "24px",
-        "h3": "20px",
-        "body": "16px",
-        "caption": "12px",
-        "kpi": "48px"
-      },
-      "weights": {
-        "bold": 700,
-        "semiBold": 600,
-        "regular": 400,
-        "light": 300
-      }
+        "fontFamily": "Inter, sans-serif",
+        "sizes": {
+            "h1": "32px",
+            "h2": "24px",
+            "h3": "20px",
+            "body": "16px",
+            "caption": "12px",
+            "kpi": "48px"
+        },
+        "weights": {
+            "bold": 700,
+            "semiBold": 600,
+            "regular": 400,
+            "light": 300
+        }
     },
     "layout": {
-      "baseUnit": 8,
-      "padding": {
-        "small": "8px",
-        "medium": "16px",
-        "large": "24px"
-      },
-      "gap": {
-        "small": "8px",
-        "medium": "12px",
-        "large": "16px"
-      }
+        "baseUnit": 8,
+        "padding": {
+            "small": "8px",
+            "medium": "16px",
+            "large": "24px"
+        },
+        "gap": {
+            "small": "8px",
+            "medium": "12px",
+            "large": "16px"
+        },
+        "pageLayoutGap": "20px"
     },
     "components": {
-      "card": {
-        "borderRadius": "24px",
-        "backgroundColor": "palette.surface",
-        "padding": "layout.padding.large",
-        "border": "1px solid palette.border"
-      },
-      "button": {
-        "borderRadius": "9999px",
-        "padding": "12px 24px",
-        "primary": {
-          "backgroundColor": "palette.primary",
-          "textColor": "#000000"
+        "card": {
+            "borderRadius": "32px",
+            "backgroundColor": "palette.surface",
+            "padding": "layout.padding.large",
+            "border": "none"
+        },
+        "button": {
+            "borderRadius": "9999px",
+            "padding": "12px 24px",
+            "primary": {
+                "backgroundColor": "palette.primary",
+                "textColor": "palette.textOnPrimary"
+            }
+        },
+        "icon": {
+            "style": "outline",
+            "size": "24px",
+            "color": "palette.textSecondary"
+        },
+        "tabs": {
+            "style": "pill",
+            "activeBackgroundColor": "palette.primary",
+            "activeTextColor": "palette.textOnPrimary",
+            "inactiveBackgroundColor": "palette.background",
+            "inactiveTextColor": "palette.textSecondary",
+            "borderRadius": "9999px",
+            "padding": "8px 16px"
+        },
+        "bottomNavBar": {
+            "containerBackgroundColor": "palette.surface",
+            "containerBorderRadius": "40px",
+            "containerPadding": "8px",
+            "itemColor": "#000000",
+            "activeItem": {
+                "backgroundColor": "#000000",
+                "color": "#FFFFFF",
+                "borderRadius": "32px"
+            }
         }
-      },
-      "icon": {
-        "style": "outline",
-        "size": "24px",
-        "color": "palette.textSecondary"
-      },
-      "tabs": {
-        "style": "pill",
-        "activeBackgroundColor": "palette.primary",
-        "activeTextColor": "#000000",
-        "inactiveBackgroundColor": "palette.surface",
-        "inactiveTextColor": "palette.textPrimary",
-        "borderRadius": "9999px",
-        "padding": "8px 16px"
-      }
     },
     "dataVis": {
-      "lineChart": {
-        "lineColor": "palette.tertiary",
-        "fill": "linear-gradient(to bottom, rgba(91, 255, 194, 0.2), rgba(91, 255, 194, 0))"
-      },
-      "radarChart": {
-        "lineColor": "palette.secondary"
-      },
-      "progressIndicator": {
-        "trackColor": "#3A3B3D",
-        "barColor": "palette.primary"
-      }
+        "lineChart": {
+            "lineColor": "palette.tertiary",
+            "fill": "linear-gradient(to bottom, rgba(91, 255, 194, 0.2), rgba(91, 255, 194, 0))"
+        },
+        "radarChart": {
+            "lineColor": "palette.secondary"
+        },
+        "progressIndicator": {
+            "trackColor": "#E5E7EB",
+            "barColor": "palette.primary"
+        }
     }
-  }
+}
