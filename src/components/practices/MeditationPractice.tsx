@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
@@ -33,6 +33,32 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
         return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
+    const handleComplete = useCallback(() => {
+        if (state.duration > 0) {
+            // 计算得分：每分钟1分
+            const score = Math.floor(state.duration / 60);
+
+            const record: PracticeRecord = {
+                id: Date.now().toString(),
+                practiceId,
+                score,
+                timestamp: Date.now(),
+                duration: state.duration,
+                meditationDuration: state.duration
+            };
+
+            storageService.saveRecord(record);
+
+            // 重置状态
+            setState({
+                isRunning: false,
+                startTime: null,
+                duration: 0,
+                remainingTime: 0
+            });
+        }
+    }, [state.duration, practiceId]);
+
     // 计时器效果
     useEffect(() => {
         let interval: ReturnType<typeof setInterval>;
@@ -61,7 +87,7 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [state.isRunning, state.remainingTime]);
+    }, [state.isRunning, state.remainingTime, handleComplete]);
 
     const handleStartMeditation = () => {
         const duration = parseInt(selectedDuration) || 5;
@@ -86,32 +112,6 @@ export const MeditationPractice: React.FC<MeditationPracticeProps> = ({
             ...prev,
             isRunning: true
         }));
-    };
-
-    const handleComplete = () => {
-        if (state.duration > 0) {
-            // 计算得分：每分钟1分
-            const score = Math.floor(state.duration / 60);
-
-            const record: PracticeRecord = {
-                id: Date.now().toString(),
-                practiceId,
-                score,
-                timestamp: Date.now(),
-                duration: state.duration,
-                meditationDuration: state.duration
-            };
-
-            storageService.saveRecord(record);
-
-            // 重置状态
-            setState({
-                isRunning: false,
-                startTime: null,
-                duration: 0,
-                remainingTime: 0
-            });
-        }
     };
 
     const handleManualComplete = () => {

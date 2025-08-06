@@ -26,19 +26,21 @@ export const StatisticsPage: React.FC = () => {
                     start: startOfDay.getTime(),
                     end: now.getTime()
                 };
-            case 'week':
+            case 'week': {
                 const startOfWeek = new Date(startOfDay);
                 startOfWeek.setDate(startOfDay.getDate() - startOfDay.getDay());
                 return {
                     start: startOfWeek.getTime(),
                     end: now.getTime()
                 };
-            case 'month':
+            }
+            case 'month': {
                 const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
                 return {
                     start: startOfMonth.getTime(),
                     end: now.getTime()
                 };
+            }
         }
     };
 
