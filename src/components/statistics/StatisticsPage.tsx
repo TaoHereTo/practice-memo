@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '../ui/carousel';
 import type { TimeRange, PracticeRecord } from '../../types';
 import { storageService } from '../../services/storage';
@@ -459,29 +459,32 @@ export const StatisticsPage: React.FC = () => {
 
             {/* 清空确认对话框 */}
             <Dialog open={showClearConfirm} onOpenChange={setShowClearConfirm}>
-                <DialogContent>
+                <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                         <DialogTitle className="text-foreground">确认清空</DialogTitle>
                         <DialogDescription className="text-muted-foreground">
                             确定要清空所有练习记录吗？此操作不可恢复，所有数据将被永久删除。
                         </DialogDescription>
                     </DialogHeader>
-                    <DialogFooter>
+                    <div className="flex justify-center gap-4 mt-6">
                         <Button
                             variant="outline"
                             onClick={() => setShowClearConfirm(false)}
-                            className="custom-button secondary"
+                            size="sm"
+                            className="px-6 bg-gray-300 text-gray-700 hover:bg-gray-400 active:bg-gray-300 active:text-gray-700"
                         >
                             取消
                         </Button>
                         <Button
                             variant="destructive"
                             onClick={handleClearConfirm}
-                            className="delete-button"
+                            size="sm"
+                            className="px-6"
+                            style={{ color: 'rgb(225, 252, 74)' }}
                         >
                             清空
                         </Button>
-                    </DialogFooter>
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

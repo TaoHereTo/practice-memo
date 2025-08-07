@@ -316,7 +316,7 @@ export const DailyMoodReviewComponent: React.FC = () => {
             </div>
 
             {/* 导航按钮 */}
-            <div className="flex justify-between">
+            <div className="flex justify-between px-4 pb-4">
                 <Button
                     onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
                     disabled={currentStep === 0}
