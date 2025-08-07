@@ -508,6 +508,113 @@
   color: #FFFFFF !important;
 }
 
+/* 流体融合导航栏样式 */
+.fluid-nav-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.fluid-nav-background {
+  position: absolute;
+  inset: 0;
+  background: #f3f4f6;
+  border-radius: 32px;
+  margin: 8px;
+}
+
+.fluid-nav-active {
+  position: absolute;
+  background: #000000;
+  border-radius: 32px;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: url(#fluid-blur);
+  will-change: left;
+}
+
+/* 基础按钮样式 */
+.nav-button-base {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* 圆形按钮样式 */
+.nav-button-circle {
+  border-radius: 50% !important;
+  width: 60px !important;
+  height: 60px !important;
+  background: white !important;
+  border: 2px solid #e5e7eb !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.nav-button-circle:hover {
+  border-color: #d1d5db !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.fluid-nav-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  will-change: transform, color, border-radius !important;
+}
+
+.fluid-nav-button.active {
+  color: white !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.fluid-nav-button.active svg {
+  stroke: white !important;
+}
+
+.fluid-nav-button.active span {
+  color: white !important;
+}
+
+/* 流体融合动画关键帧 - 简化版本 */
+@keyframes fluidStretch {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fluidMerge {
+  0% {
+    opacity: 0.95;
+    transform: scale(0.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 简化的流体效果 */
+.fluid-elongate {
+  animation: fluidStretch 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fluid-contact {
+  animation: fluidMerge 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* 成功按钮样式 */
 .success-button {
   background: #5BFFC2 !important;
